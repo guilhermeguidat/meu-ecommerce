@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Profile Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(19, 91, 236, 0.1);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(19, 91, 236, 0.3);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<nav class="sticky top-0 z-50 glass-panel border-b border-gray-200 dark:border-gray-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-lg">L</div>
+<span class="font-bold text-xl tracking-tight">LuxeMarket</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="p-2 text-gray-500 hover:text-primary transition-colors">
+<span class="material-icons">search</span>
+</button>
+<button class="p-2 text-gray-500 hover:text-primary transition-colors relative">
+<span class="material-icons">shopping_bag</span>
+<span class="absolute top-1 right-0 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<button class="p-1 rounded-full border-2 border-transparent hover:border-primary/20 transition-all">
+<img alt="User profile avatar" class="h-8 w-8 rounded-full object-cover" data-alt="User profile photo thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6nZGrEbVHAZ09-sqoXHxq_kd9hi6h9-gmvdhfs6fVhERMD5qu7MdM49-PS1Lb8Ta-TS8pk-n7u95Rbql-qqMfGjUy8Uh95LLY-p2C_wmkKJQmaJXPhNzjMvjyB2ujdte6re9ON9FsJbKQ84mrenEqhEIEpcC6VYkWPCukdTgt9KCe4pAsD3UdZISIWLm_bnUPF0iO5VzcX8tv2Egy9gBPam_udILGvCNCxmn3J_D9Gq7nyUVaUSTPkmZQ0Twl3G0NINC4-JnBfWKn"/>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-grow py-10 px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Sidebar / Profile Summary -->
+<div class="lg:col-span-4 xl:col-span-3 space-y-6">
+<!-- Profile Card -->
+<div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 flex flex-col items-center text-center">
+<div class="relative group cursor-pointer">
+<img alt="Detailed user profile photo" class="h-24 w-24 rounded-full object-cover ring-4 ring-primary/10 transition-all group-hover:ring-primary/30" data-alt="Close up of a smiling man in a suit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDz80uQt2TMShZoFUcJv58aAdsr1iyJwPIKhAUcVuwARMnNHqFNywWXDUsVOiJXDxCxdPgziepg5Vpwzf-oYJUOVy_sJ5t4nRB820CiZ02aVWv7WYrWSNJj8mGh2X6pYEMt8FRSK3Iwna3epVE3etvDzePYWcRUm6c12-4pWMZg_sUALNqR7GYOkSUOZta-ZMM4Us_w4dWO6EtzXnPPv6DCPLybAUerw6hMnrJPm6CC7vaD_3wgomAUeYVLbG9pLPioS1XoX3vqeRA0"/>
+<div class="absolute bottom-0 right-0 bg-primary text-white p-1.5 rounded-full border-4 border-white dark:border-gray-900 shadow-md">
+<span class="material-icons text-xs font-bold block">edit</span>
+</div>
+</div>
+<h2 class="mt-4 text-xl font-bold text-gray-900 dark:text-white">Alexander Pierce</h2>
+<p class="text-sm text-gray-500 dark:text-gray-400">alex.pierce@example.com</p>
+<div class="mt-6 flex items-center gap-2 px-3 py-1 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-full text-xs font-semibold border border-amber-100 dark:border-amber-800">
+<span class="material-icons text-sm">workspace_premium</span>
+                            Platinum Member
+                        </div>
+</div>
+<!-- Navigation Menu -->
+<nav class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<div class="p-2 space-y-1">
+<a class="flex items-center px-4 py-3 bg-primary/10 text-primary rounded-lg font-medium transition-colors" href="#">
+<span class="material-icons mr-3">dashboard</span>
+                                Dashboard
+                            </a>
+<a class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors" href="#">
+<span class="material-icons mr-3 text-gray-400">local_shipping</span>
+                                My Orders
+                            </a>
+<a class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors" href="#">
+<span class="material-icons mr-3 text-gray-400">favorite_border</span>
+                                Wishlist
+                            </a>
+<a class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors" href="#">
+<span class="material-icons mr-3 text-gray-400">reviews</span>
+                                My Reviews
+                            </a>
+</div>
+<div class="border-t border-gray-100 dark:border-gray-800 p-2 mt-1 space-y-1">
+<a class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors" href="#">
+<span class="material-icons mr-3 text-gray-400">settings</span>
+                                Settings
+                            </a>
+<a class="flex items-center px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg font-medium transition-colors" href="#">
+<span class="material-icons mr-3 text-red-400">logout</span>
+                                Sign Out
+                            </a>
+</div>
+</nav>
+</div>
+<!-- Right Column: Dashboard Content -->
+<div class="lg:col-span-8 xl:col-span-9 space-y-8">
+<!-- Stats / Quick Overview -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-primary text-white rounded-xl p-6 shadow-lg shadow-primary/20 relative overflow-hidden">
+<div class="relative z-10">
+<p class="text-primary-100 text-sm font-medium mb-1">Total Savings</p>
+<h3 class="text-3xl font-bold">$1,240.50</h3>
+</div>
+<div class="absolute right-0 bottom-0 opacity-10 transform translate-y-2 translate-x-2">
+<span class="material-icons" style="font-size: 80px;">savings</span>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Active Orders</p>
+<h3 class="text-3xl font-bold text-gray-900 dark:text-white">2</h3>
+</div>
+<div class="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg text-primary">
+<span class="material-icons">local_shipping</span>
+</div>
+</div>
+<a class="text-sm text-primary font-medium hover:underline mt-4 inline-flex items-center" href="#">
+                                Track now <span class="material-icons text-xs ml-1">arrow_forward</span>
+</a>
+</div>
+<div class="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Loyalty Points</p>
+<h3 class="text-3xl font-bold text-gray-900 dark:text-white">450</h3>
+</div>
+<div class="bg-amber-50 dark:bg-amber-900/20 p-2 rounded-lg text-amber-500">
+<span class="material-icons">star</span>
+</div>
+</div>
+<p class="text-xs text-gray-400 mt-4">50 points until next reward</p>
+</div>
+</div>
+<!-- Recent Orders Section -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent Orders</h3>
+<a class="text-sm font-medium text-primary hover:text-primary/80" href="#">View all</a>
+</div>
+<div class="space-y-4">
+<!-- Order Card 1 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 transition-all hover:shadow-md">
+<div class="flex flex-col sm:flex-row gap-4">
+<div class="h-24 w-24 flex-shrink-0 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden relative">
+<img alt="Red sneaker shoe" class="h-full w-full object-cover object-center" data-alt="Red athletic sneaker on white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2S8rJEdjP-eLICck5kS5Yd1ffqPP0tBSD4-tuVft2JuH-LLv2_RcWeQYbCvYSWZZGQZZwq6M13JrdM2h9ZJmMq4-sD5QT4stK3npCPPLw7FWeUsZ7I_YRI7ZQZOvbFo9I0IUdOxt3wq9-0XGGY90l9CvI5406c-nG5DPwmapOG1Gk0yvjJRSP1JkgHeARI9DRk4cp8ymo-NQ9cvshDMBsNLlkme1ZNBlEAAh7Nzoyn6H0j--10t0PIv6a_b9QvXSkerSLNKjHHjHn"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white">Nike Air Max 270</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Order #845-921 • Oct 24, 2023</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                                Delivered
+                                            </span>
+</div>
+<div class="mt-4 flex justify-between items-end">
+<p class="text-lg font-bold text-gray-900 dark:text-white">$145.00</p>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">Buy Again</button>
+<button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary/30 hover:bg-primary/5 rounded-lg transition-colors">View Order</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Order Card 2 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 transition-all hover:shadow-md">
+<div class="flex flex-col sm:flex-row gap-4">
+<div class="h-24 w-24 flex-shrink-0 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden relative">
+<img alt="Smart Watch" class="h-full w-full object-cover object-center" data-alt="White modern smart watch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj3zgRTkFuJGUJd64YpRNd11BNEzA9dtpwzL7h2awJ5x7oQtPeSbcUVU6sR7n5hdoioSaZ_IToDYFmNqszFFvrCdFGUz5-bcJUK7mRm5si3KUViZE9pKqfRL3ymYGMSF_ra1wv-OHGuwGQ8acwPZ2ks-bbZ6EHmn5TkaEqc_WhmUsYFhtbeXaM4yn_z0ZUd8FyaKJa1ubaDQ55TYOzJDz2rT8VqwJnDKWkf_eCKWBdPctyMm-uFSbvKYu5LShMj60Q3dweDcRTDfwc"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white">Apple Watch Series 7</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Order #845-922 • Oct 22, 2023</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                                In Transit
+                                            </span>
+</div>
+<div class="mt-4 flex justify-between items-end">
+<p class="text-lg font-bold text-gray-900 dark:text-white">$399.00</p>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 text-xs font-medium text-white bg-primary hover:bg-primary/90 shadow-sm shadow-primary/30 rounded-lg transition-colors">Track Package</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Settings Grid -->
+<section>
+<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Account Management</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Saved Addresses -->
+<a class="group bg-white dark:bg-gray-900 p-5 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-primary/30 transition-all flex items-start gap-4" href="#">
+<div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 group-hover:bg-primary/10 transition-colors">
+<span class="material-icons text-gray-500 dark:text-gray-400 group-hover:text-primary">location_on</span>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors">Saved Addresses</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage delivery locations</p>
+</div>
+</a>
+<!-- Payment Methods -->
+<a class="group bg-white dark:bg-gray-900 p-5 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-primary/30 transition-all flex items-start gap-4" href="#">
+<div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 group-hover:bg-primary/10 transition-colors">
+<span class="material-icons text-gray-500 dark:text-gray-400 group-hover:text-primary">credit_card</span>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors">Payment Methods</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage cards and billing</p>
+</div>
+</a>
+<!-- Privacy & Security -->
+<a class="group bg-white dark:bg-gray-900 p-5 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-primary/30 transition-all flex items-start gap-4" href="#">
+<div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 group-hover:bg-primary/10 transition-colors">
+<span class="material-icons text-gray-500 dark:text-gray-400 group-hover:text-primary">lock</span>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors">Privacy &amp; Security</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Change password &amp; controls</p>
+</div>
+</a>
+<!-- Help & Support -->
+<a class="group bg-white dark:bg-gray-900 p-5 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-primary/30 transition-all flex items-start gap-4" href="#">
+<div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 group-hover:bg-primary/10 transition-colors">
+<span class="material-icons text-gray-500 dark:text-gray-400 group-hover:text-primary">support_agent</span>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors">Help &amp; Support</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">FAQs and customer service</p>
+</div>
+</a>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Simple -->
+<footer class="mt-auto py-6 text-center text-sm text-gray-400 dark:text-gray-600 border-t border-gray-200 dark:border-gray-800">
+<p>© 2023 LuxeMarket. All rights reserved.</p>
+</footer>
+</body></html>

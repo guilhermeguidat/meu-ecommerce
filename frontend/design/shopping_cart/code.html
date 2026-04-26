@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shopping Cart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-hover": "#0e4bce", // Slightly darker for hover states
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1c2433",
+                        "neutral-light": "#e2e8f0",
+                        "neutral-dark": "#2d3748",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(19, 91, 236, 0.05)',
+                        'hover': '0 10px 25px -5px rgba(19, 91, 236, 0.1)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #cbd5e0;
+            border-radius: 20px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: #4a5568;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased min-h-screen flex flex-col transition-colors duration-300">
+<!-- Header Navigation -->
+<header class="sticky top-0 z-50 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-neutral-light dark:border-neutral-dark">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-16">
+<!-- Logo -->
+<div class="flex items-center gap-2 cursor-pointer">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white">
+<span class="material-icons text-xl">shopping_bag</span>
+</div>
+<span class="font-bold text-xl tracking-tight">LuxeCart</span>
+</div>
+<!-- Nav Links (Desktop) -->
+<nav class="hidden md:flex space-x-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">New Arrivals</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Women</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Men</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Accessories</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-neutral-light dark:hover:bg-neutral-dark transition-colors">
+<span class="material-icons text-slate-500 dark:text-slate-400">search</span>
+</button>
+<button class="relative p-2 rounded-full hover:bg-neutral-light dark:hover:bg-neutral-dark transition-colors">
+<span class="material-icons text-primary">shopping_cart</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+<!-- User Avatar -->
+<button class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden ml-2">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="User profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBup3dIEGDsvnuhJgT_CwFbJCVhnfeBRKyzl5i9cNZ0bd06LVoSweEr0L02nBQgSwlPfDErL5-wBWqARKnobW3sWf06RQ5RKE4BK1kCzTyhZdhGMps4LQtXJgnZXELnkpoEZliWhJhr4bFpVj0qUE8bRGJHgVwT7uyOn9ZTs7c4TMjMmU9lmqDy10Wzr5SXg0dDvebk6fljpMCrZ7FqVLYkd4yatmS7Qunz-wYFFc-qyAl2M7CNIpt57pOYeA4Tl5WanhgXe8YDvTy7"/>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow py-12 px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto">
+<!-- Breadcrumbs -->
+<nav class="flex mb-8 text-sm text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary" href="#">Home</a>
+<span class="mx-2">/</span>
+<span class="text-slate-900 dark:text-white font-medium">Shopping Cart</span>
+</nav>
+<h1 class="text-3xl font-bold mb-8">Your Cart <span class="text-lg font-normal text-slate-500 dark:text-slate-400 ml-2">(3 items)</span></h1>
+<div class="lg:grid lg:grid-cols-12 lg:gap-12 items-start">
+<!-- Left Column: Cart Items -->
+<div class="lg:col-span-8 space-y-6">
+<!-- Cart Item 1 -->
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-xl p-4 sm:p-6 shadow-soft hover:shadow-hover transition-all duration-300 border border-transparent hover:border-primary/10">
+<div class="flex gap-6">
+<!-- Image -->
+<div class="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
+<img alt="Premium Wireless Headphones" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Close up of premium grey wireless headphones on a white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnfMutBDX91sQAZB_PZZrLncPob9r7U7mGeRDeXr7_52XGkfGeQf9pgrBHjzEzDa0fnkJPKHwiZv7yCqpYD4HLdf1zOleW__cIRDOYn2dg3Vb6ut3DCsjbni1ovkmp4eCNHor-l25WxbrV_IQZGWkYNPTodQOGM8aioi25cxlIu37ebLwnjG9QuS21vj5LnVVv4ruFBJiY4W8cXURzDcN8DHCXC9aIqh682AT5XD7bhsDVk1qKM0Egl2CDrAxGBr0-iD70yPVKiFvz"/>
+</div>
+<!-- Content -->
+<div class="flex-grow flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-semibold text-slate-900 dark:text-white">Beats Studio Pro - Wireless</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Color: Sandstone | Connectivity: Bluetooth 5.0</p>
+<p class="text-sm text-green-600 dark:text-green-400 mt-1 font-medium">In Stock</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity p-2 text-slate-400 hover:text-red-500 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20" title="Remove item">
+<span class="material-icons">delete_outline</span>
+</button>
+</div>
+<div class="flex justify-between items-end mt-4">
+<!-- Quantity Stepper -->
+<div class="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg bg-background-light dark:bg-background-dark/50">
+<button class="p-2 px-3 text-slate-500 hover:text-primary disabled:opacity-50 transition-colors">
+<span class="material-icons text-sm">remove</span>
+</button>
+<input class="w-8 text-center bg-transparent border-none p-0 text-sm font-semibold text-slate-900 dark:text-white focus:ring-0" readonly="" type="text" value="1"/>
+<button class="p-2 px-3 text-slate-500 hover:text-primary transition-colors">
+<span class="material-icons text-sm">add</span>
+</button>
+</div>
+<!-- Price -->
+<div class="text-right">
+<p class="text-xl font-bold text-slate-900 dark:text-white">$349.99</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Cart Item 2 -->
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-xl p-4 sm:p-6 shadow-soft hover:shadow-hover transition-all duration-300 border border-transparent hover:border-primary/10">
+<div class="flex gap-6">
+<!-- Image -->
+<div class="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
+<img alt="Minimalist White Watch" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Minimalist white wristwatch on a wrist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAviqnb4lTHwrlNgjB2dRDnO0QU3Pn69AUtOVnkW9tjOmFemfqNdfMiwbebhNc0EHwWnNQf_bXk4FF_xBEqWGrKMG0hxpkoVKYG6Q4fpXMTkoaEX5aD6nAc5LJbOUYuFlK8UJujGb7-7LM4yJ9hhR0FlW7FDLrdw_WlPsFs7eJe2CSifqsjYuTnHGAJVwRZpIW2h9XHG7Xi0WQX4e18cFru61PGSWNFisQSZCobC9_gkppC-EMcGJ9c4dfYCAbYzb--anqYL9HzoXuz"/>
+</div>
+<!-- Content -->
+<div class="flex-grow flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-semibold text-slate-900 dark:text-white">Icon Series Watch</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Strap: Leather White | Size: 40mm</p>
+<p class="text-sm text-orange-500 mt-1 font-medium">Low Stock - Only 2 left</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity p-2 text-slate-400 hover:text-red-500 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20" title="Remove item">
+<span class="material-icons">delete_outline</span>
+</button>
+</div>
+<div class="flex justify-between items-end mt-4">
+<!-- Quantity Stepper -->
+<div class="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg bg-background-light dark:bg-background-dark/50">
+<button class="p-2 px-3 text-slate-500 hover:text-primary disabled:opacity-50 transition-colors">
+<span class="material-icons text-sm">remove</span>
+</button>
+<input class="w-8 text-center bg-transparent border-none p-0 text-sm font-semibold text-slate-900 dark:text-white focus:ring-0" readonly="" type="text" value="1"/>
+<button class="p-2 px-3 text-slate-500 hover:text-primary transition-colors">
+<span class="material-icons text-sm">add</span>
+</button>
+</div>
+<!-- Price -->
+<div class="text-right">
+<p class="text-xl font-bold text-slate-900 dark:text-white">$199.00</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Cart Item 3 -->
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-xl p-4 sm:p-6 shadow-soft hover:shadow-hover transition-all duration-300 border border-transparent hover:border-primary/10">
+<div class="flex gap-6">
+<!-- Image -->
+<div class="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
+<img alt="Red Sneaker" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Red Nike running shoe floating on a red background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSDIWPVwtLP4aHjkZ0PTOAXyY9buJbxU9NSD4Gb-v8pLvIPOeRIhyA6wsq2mc65v4F-fErE4cME9kchN7GaTI02-EJoT8kZo65CSB960m5KQOs_xlITLtnTy7qpyYhdjRUUKwXD-2WRZRz9EccKTvxwoRCCChHd9ZxrSA81qtcePqkVmZ6YQM9ddL6gnuFszMXgp1vl1sq7mFzTtEn8W8fcfACkxjYpMo4IwarQireFKjVLjPj0VjF7JhUn5re4dSDPw394coJlWt0"/>
+</div>
+<!-- Content -->
+<div class="flex-grow flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-semibold text-slate-900 dark:text-white">Nike Air Max 270</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Color: Varsity Red | Size: US 10</p>
+<p class="text-sm text-green-600 dark:text-green-400 mt-1 font-medium">In Stock</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity p-2 text-slate-400 hover:text-red-500 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20" title="Remove item">
+<span class="material-icons">delete_outline</span>
+</button>
+</div>
+<div class="flex justify-between items-end mt-4">
+<!-- Quantity Stepper -->
+<div class="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg bg-background-light dark:bg-background-dark/50">
+<button class="p-2 px-3 text-slate-500 hover:text-primary disabled:opacity-50 transition-colors">
+<span class="material-icons text-sm">remove</span>
+</button>
+<input class="w-8 text-center bg-transparent border-none p-0 text-sm font-semibold text-slate-900 dark:text-white focus:ring-0" readonly="" type="text" value="1"/>
+<button class="p-2 px-3 text-slate-500 hover:text-primary transition-colors">
+<span class="material-icons text-sm">add</span>
+</button>
+</div>
+<!-- Price -->
+<div class="text-right">
+<p class="text-xl font-bold text-slate-900 dark:text-white">$160.00</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Extra Info -->
+<div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400 pt-4 px-2">
+<span class="material-icons text-lg">local_shipping</span>
+<p>Free shipping on orders over $50. Returns valid for 30 days.</p>
+</div>
+</div>
+<!-- Right Column: Order Summary -->
+<div class="lg:col-span-4 mt-8 lg:mt-0">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-6 shadow-soft border border-slate-100 dark:border-slate-800 sticky top-24">
+<h2 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Order Summary</h2>
+<!-- Summary Rows -->
+<div class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex justify-between">
+<span>Subtotal</span>
+<span class="font-medium text-slate-900 dark:text-white">$708.99</span>
+</div>
+<div class="flex justify-between">
+<span>Shipping estimate</span>
+<span class="text-green-600 dark:text-green-400 font-medium">Free</span>
+</div>
+<div class="flex justify-between">
+<span>Tax estimate</span>
+<span class="font-medium text-slate-900 dark:text-white">$56.72</span>
+</div>
+<!-- Promo Code Input -->
+<div class="pt-4 pb-2">
+<label class="sr-only" for="promo">Promo Code</label>
+<div class="flex gap-2">
+<input class="w-full rounded-lg bg-background-light dark:bg-background-dark border-slate-200 dark:border-slate-700 text-sm focus:ring-primary focus:border-primary" id="promo" placeholder="Promo code" type="text"/>
+<button class="px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">Apply</button>
+</div>
+</div>
+</div>
+<hr class="my-6 border-slate-200 dark:border-slate-700"/>
+<!-- Total -->
+<div class="flex justify-between items-center mb-6">
+<span class="text-base font-semibold text-slate-900 dark:text-white">Order Total</span>
+<span class="text-2xl font-bold text-slate-900 dark:text-white">$765.71</span>
+</div>
+<!-- Checkout Button -->
+<button class="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-4 rounded-lg shadow-lg hover:shadow-primary/30 transition-all transform active:scale-[0.98] flex justify-center items-center gap-2 group">
+<span>Proceed to Checkout</span>
+<span class="material-icons text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<div class="mt-6 flex justify-center gap-4">
+<img alt="Mastercard logo" class="h-6 opacity-60 grayscale hover:grayscale-0 transition-all" data-alt="Mastercard logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv9iF26-iDC-23rjfxjMRbGigERXYbxM1DuQy5brlDmJJcvAcDre5tX66gvcQSqrc0ml1gg6oPD_zC-BSnie1xUdGFJ6NctbkAlXZlY3WVUvveWMnJ6U1Sh6Va9rAQcMejhyS3MSgg0UjWRExTYF6iPVEvxbIFuA7XjTVgGP_-RLHFzX6qMK8k8r4Eud_oYVnPxEhdO_KawW5gA33ks3sVC7zYgjDwi4p0qDnvZ_5tRbptorvQ1lIR2ZgemQJrBtQLn26RhPNZt7bt"/>
+<img alt="Visa logo" class="h-6 opacity-60 grayscale hover:grayscale-0 transition-all" data-alt="Visa logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3K_KmJuVrmA9SX4e42RoYKkXErOCUf1bvrVzB0P42_WezM5wxuCvLJcq1R4URAwx22xLc7QTW0Ql3IG-q6MzQCK7F8-5HPCSJ3_BUpFgwnCWtUnmvAzCNgp5UEkVcWZ4eS9GIeXGPGa8tNwVRw_3_DpkxwNrP5dIDDed_pYAvfak28Gojj00Xn8ceq_00SD_-cxThX_NZfuuVdfS072W9FSrnsJskmU3HQOVIHpwwWnu4wwwfHWSt3HjbyARhcj6kQr1ON1sJVXdV"/>
+<img alt="Paypal logo" class="h-6 opacity-60 grayscale hover:grayscale-0 transition-all" data-alt="Paypal logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn7Hl-jg1KSQMcGyJBAGnAD2TkGRtnXmA0hQJzvaJ8mQ2Yp7Nbm_I0wlcXpv8UTybBx7PMqdlJsm13GHMyULPRhh-IuG7HsS001zaLWmawA1OBu1KTuTTxefGtnrOfrEAvNhKeCZwrH3SwwYMrv1iEwXLfR2N6HzsPP_cPsyic-V7D0YAM_WxaQft4-OY2ea7l5xUlwi4tEsqPWMcu7QLRnMWa6B9ycvSeXkOMnWxn3XB17jcuZaF8viB4JyCA3zn59S6HfpfGaKqF"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-light dark:bg-surface-dark border-t border-neutral-light dark:border-neutral-dark py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-6 h-6 rounded bg-primary flex items-center justify-center text-white">
+<span class="material-icons text-xs">shopping_bag</span>
+</div>
+<span class="font-bold text-lg">LuxeCart</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400">Premium shopping experience for the modern lifestyle.</p>
+</div>
+<div>
+<h4 class="font-semibold text-slate-900 dark:text-white mb-4">Shop</h4>
+<ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">New Arrivals</a></li>
+<li><a class="hover:text-primary" href="#">Best Sellers</a></li>
+<li><a class="hover:text-primary" href="#">Sale</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-semibold text-slate-900 dark:text-white mb-4">Support</h4>
+<ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Help Center</a></li>
+<li><a class="hover:text-primary" href="#">Returns</a></li>
+<li><a class="hover:text-primary" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-semibold text-slate-900 dark:text-white mb-4">Legal</h4>
+<ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-neutral-light dark:border-neutral-dark text-center text-sm text-slate-400">
+                © 2023 LuxeCart Inc. All rights reserved.
+            </div>
+</div>
+</footer>
+<!-- Theme Toggle Script (Simulated) -->
+<script>
+        // Simple logic to demonstrate hover effects or simple interactions if needed, 
+        // strictly for the demo purpose as requested no heavy JS.
+        // In a real app, this would handle cart state management.
+    </script>
+</body></html>

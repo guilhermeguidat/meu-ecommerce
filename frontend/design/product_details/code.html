@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        /* Hide scrollbar for gallery thumbnails */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Navigation -->
+<nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400">
+<span class="material-icons-round">menu</span>
+</button>
+<div class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Lumina</div>
+</div>
+<div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+<a class="hover:text-primary transition-colors" href="#">New Arrivals</a>
+<a class="hover:text-primary transition-colors" href="#">Electronics</a>
+<a class="hover:text-primary transition-colors" href="#">Accessories</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400">
+<span class="material-icons-round">search</span>
+</button>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 relative">
+<span class="material-icons-round">shopping_bag</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<!-- Breadcrumbs -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+<nav aria-label="Breadcrumb" class="flex text-sm text-slate-500 dark:text-slate-400">
+<ol class="inline-flex items-center space-x-1 md:space-x-3">
+<li class="inline-flex items-center">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+</li>
+<li>
+<div class="flex items-center">
+<span class="material-icons-round text-lg mx-1">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Audio</a>
+</div>
+</li>
+<li>
+<div class="flex items-center">
+<span class="material-icons-round text-lg mx-1">chevron_right</span>
+<span class="font-medium text-slate-900 dark:text-white">Pro Studio Headphones</span>
+</div>
+</li>
+</ol>
+</nav>
+</div>
+<!-- Main Content -->
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
+<div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+<!-- Left Column: Gallery -->
+<div class="product-gallery space-y-4">
+<!-- Main Image -->
+<div class="aspect-[4/3] w-full bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm relative group">
+<img alt="High quality studio headphones on a minimalist background" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="High quality studio headphones on a minimalist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwf7yzlV6P1fB6JZXS80banfUkRWk82DvDgxqtV6rkuuyfTnOXi8CKN5mpKKIQBHxqdIU13ttBvuvblVfdz2niN2KKwY868mv6-M8ugHdNxGP91bOqyW9k8zr2NYSHkKzCPvvTffVcqHSGCPNKVkBYQuJcBsBG4UWlG61PmFJEJWOLw0XZl1Jv749P7ZKV93fbz323Ky1dCD26Aw0Bfw_fGUZvv3vl6emKq06R3Wger6ta2CH2z0Q3pBB9VvKPq7MoxKPej0ITA1aK"/>
+<button class="absolute top-4 right-4 p-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur rounded-full text-slate-400 hover:text-red-500 transition-colors shadow-sm">
+<span class="material-icons-round text-xl">favorite_border</span>
+</button>
+</div>
+<!-- Thumbnails Grid -->
+<div class="grid grid-cols-4 gap-4">
+<button class="aspect-square rounded-lg overflow-hidden border-2 border-primary ring-2 ring-primary/20 ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark">
+<img alt="Headphones side view" class="w-full h-full object-cover" data-alt="Headphones side view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD47J5oVlbJYtYpYZZPsRQvwceA6VjfYogXJ-dkTMeWyAmKYAiJwZxeImDcQf_WYAaVb8gkyjI4nn9rP3VqXF7g0NAkR6zhilKaqb-MPXSzeK6pPO_CtuSZjeBt2n2qZIJzStDamI-iwQamf4pSQDxWA1rMZUbjILALDtdstFC10NNPZ3eYsSThUGJlbzRk2egdAj1-7RZieOPaD8lMD9kHy2Yp6sc6lgIxmLduu7Mw82sB0KgHoIpc-mtZmdsXBYxX-hHtJvjFUE7"/>
+</button>
+<button class="aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 transition-all opacity-70 hover:opacity-100">
+<img alt="Headphones close up detail" class="w-full h-full object-cover" data-alt="Headphones close up detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbcHU72uCp2eD_gAauIH1EaGhaip1AtffniF6A2oWoMbUFe8DNg7med_JHdmqM_-ePPwfzBacQM40BpsXh0tuyJJhIhvEt2IzHViHDuN6iHh9ZP0q_xlWHT5Cze6bKXn_KubJSYypnW7iInT-7fDwiOrNkpIFT3HTgF8b3Dz8S8erJOQvLWfdrVx7a7dpjMJ6VxmJD9q78ObkL4PtT76lJkCaw3kQsVz69A7aXDbk90HCeurMXLklNOlYAlpm0HZKWTZKA7xZQdqiA"/>
+</button>
+<button class="aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 transition-all opacity-70 hover:opacity-100">
+<img alt="Headphones lifestyle shot" class="w-full h-full object-cover" data-alt="Headphones lifestyle shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxIFemhN6k6skemgKBvbevTqo5qdKTTJJ5tqd_50ewh9BLKX84UEO8KxjIPmeJShZFJqCzGDON_MAt-0qdqvMWqe0OSkBzHxiJSCfBS6vwIUFnsItKjVq5Q6JZ2rbd6NM1UfYh7PAcnBASx02qUWNNvIITDoXy10kjB4_mtRZRH7DAnSeDmG5iGV9cdlQ6T95ywS9nW1-7XaFDcn5qKSWlCSByAi142o6Az94uIYTnPxzRoGmTvG58AwA1V9tafxRiOUXEWKt8DXcC"/>
+</button>
+<button class="aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 transition-all opacity-70 hover:opacity-100 relative bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-icons-round text-3xl text-slate-400">play_arrow</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Product Info -->
+<div class="mt-10 px-0 sm:mt-16 sm:px-0 lg:mt-0 relative">
+<!-- Sticky Wrapper for Desktop -->
+<div class="lg:sticky lg:top-24 space-y-8">
+<!-- Header -->
+<div class="space-y-2">
+<div class="flex justify-between items-start">
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Sonic Pro X</h1>
+<div class="flex items-center space-x-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded text-xs font-semibold uppercase tracking-wide">
+<span>In Stock</span>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<p class="text-3xl tracking-tight text-slate-900 dark:text-white font-medium">$349.00</p>
+<div class="flex items-center">
+<div class="flex items-center text-yellow-400">
+<span class="material-icons-round text-lg">star</span>
+<span class="material-icons-round text-lg">star</span>
+<span class="material-icons-round text-lg">star</span>
+<span class="material-icons-round text-lg">star</span>
+<span class="material-icons-round text-lg">star_half</span>
+</div>
+<span class="ml-2 text-sm text-slate-500 dark:text-slate-400">(248 reviews)</span>
+</div>
+</div>
+</div>
+<!-- Configurator -->
+<div class="space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+<!-- Color Selector -->
+<div>
+<h3 class="text-sm font-medium text-slate-900 dark:text-white mb-3">Color</h3>
+<div class="flex items-center space-x-3">
+<label class="relative -m-0.5 p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none ring-2 ring-primary ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark">
+<span class="sr-only">Black</span>
+<span aria-hidden="true" class="h-8 w-8 bg-slate-900 border border-black/10 rounded-full"></span>
+</label>
+<label class="relative -m-0.5 p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none ring-transparent hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-600 transition-all">
+<span class="sr-only">Silver</span>
+<span aria-hidden="true" class="h-8 w-8 bg-slate-200 border border-black/10 rounded-full"></span>
+</label>
+<label class="relative -m-0.5 p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none ring-transparent hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-600 transition-all">
+<span class="sr-only">Midnight Blue</span>
+<span aria-hidden="true" class="h-8 w-8 bg-[#1e293b] border border-black/10 rounded-full"></span>
+</label>
+</div>
+</div>
+<!-- Add-ons / Options -->
+<div>
+<div class="flex justify-between mb-3">
+<h3 class="text-sm font-medium text-slate-900 dark:text-white">Coverage</h3>
+<a class="text-sm font-medium text-primary hover:text-primary/80" href="#">Learn more</a>
+</div>
+<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+<div class="relative flex cursor-pointer rounded-lg border bg-white dark:bg-slate-800 p-4 shadow-sm focus:outline-none border-primary ring-1 ring-primary">
+<div class="flex flex-1">
+<div class="flex flex-col">
+<span class="block text-sm font-medium text-slate-900 dark:text-white">AppleCare+</span>
+<span class="mt-1 flex items-center text-sm text-slate-500 dark:text-slate-400">2 years coverage</span>
+<span class="mt-2 text-sm font-semibold text-slate-900 dark:text-white">$49.00</span>
+</div>
+</div>
+<span class="material-icons-round text-primary absolute top-4 right-4 text-xl">check_circle</span>
+</div>
+<div class="relative flex cursor-pointer rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm focus:outline-none hover:border-slate-300 dark:hover:border-slate-600">
+<div class="flex flex-1">
+<div class="flex flex-col">
+<span class="block text-sm font-medium text-slate-900 dark:text-white">Standard</span>
+<span class="mt-1 flex items-center text-sm text-slate-500 dark:text-slate-400">1 year warranty</span>
+<span class="mt-2 text-sm font-semibold text-slate-900 dark:text-white">Free</span>
+</div>
+</div>
+<span class="material-icons-round text-transparent absolute top-4 right-4 text-xl">radio_button_unchecked</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Accordions -->
+<div class="divide-y divide-slate-200 dark:divide-slate-800 border-t border-slate-200 dark:border-slate-800 pt-6">
+<!-- Description -->
+<details class="group py-4" open="">
+<summary class="flex cursor-pointer items-center justify-between font-medium text-slate-900 dark:text-white list-none focus:outline-none">
+<span>Description</span>
+<span class="transition group-open:rotate-180">
+<span class="material-icons-round">expand_more</span>
+</span>
+</summary>
+<div class="text-slate-600 dark:text-slate-300 mt-4 text-sm leading-relaxed animate-fade-in-down">
+<p class="mb-4">
+                                    Experience sound like never before with the Sonic Pro X. Featuring our proprietary Active Noise Cancellation technology, these headphones adapt to your environment 50,000 times a second to silence the world around you.
+                                </p>
+<p>
+                                    Crafted with premium lightweight materials and soft memory foam ear cushions, they are designed for all-day comfort. The custom-built drivers deliver deep, punchy bass and crystal-clear highs for an immersive listening experience.
+                                </p>
+</div>
+</details>
+<!-- Specifications -->
+<details class="group py-4">
+<summary class="flex cursor-pointer items-center justify-between font-medium text-slate-900 dark:text-white list-none focus:outline-none">
+<span>Specifications</span>
+<span class="transition group-open:rotate-180">
+<span class="material-icons-round">expand_more</span>
+</span>
+</summary>
+<div class="text-slate-600 dark:text-slate-300 mt-4 text-sm leading-relaxed">
+<dl class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
+<div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+<dt class="font-medium text-slate-900 dark:text-white">Battery Life</dt>
+<dd class="mt-1 text-slate-500 dark:text-slate-400">Up to 30 hours</dd>
+</div>
+<div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+<dt class="font-medium text-slate-900 dark:text-white">Weight</dt>
+<dd class="mt-1 text-slate-500 dark:text-slate-400">254g</dd>
+</div>
+<div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+<dt class="font-medium text-slate-900 dark:text-white">Connectivity</dt>
+<dd class="mt-1 text-slate-500 dark:text-slate-400">Bluetooth 5.2</dd>
+</div>
+<div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+<dt class="font-medium text-slate-900 dark:text-white">Charging</dt>
+<dd class="mt-1 text-slate-500 dark:text-slate-400">USB-C Fast Charge</dd>
+</div>
+</dl>
+</div>
+</details>
+<!-- Shipping -->
+<details class="group py-4">
+<summary class="flex cursor-pointer items-center justify-between font-medium text-slate-900 dark:text-white list-none focus:outline-none">
+<span>Shipping &amp; Returns</span>
+<span class="transition group-open:rotate-180">
+<span class="material-icons-round">expand_more</span>
+</span>
+</summary>
+<div class="text-slate-600 dark:text-slate-300 mt-4 text-sm leading-relaxed">
+<p class="flex items-center gap-2 mb-2">
+<span class="material-icons-round text-lg text-primary">local_shipping</span>
+                                    Free shipping on orders over $50
+                                </p>
+<p class="flex items-center gap-2">
+<span class="material-icons-round text-lg text-primary">replay</span>
+                                    30-day money-back guarantee
+                                </p>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+<!-- Desktop: Price Summary (Hidden on Mobile) -->
+<div class="hidden sm:flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Total Price</span>
+<span class="text-xl font-bold text-slate-900 dark:text-white">$398.00</span>
+</div>
+<!-- Actions Container -->
+<div class="flex w-full sm:w-auto items-center gap-4">
+<!-- Quantity Stepper -->
+<div class="flex items-center rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 h-12 px-2 shrink-0">
+<button class="w-8 h-full flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary transition-colors disabled:opacity-50">
+<span class="material-icons-round text-lg">remove</span>
+</button>
+<input class="w-8 text-center bg-transparent border-none p-0 text-slate-900 dark:text-white font-medium focus:ring-0" readonly="" type="text" value="1"/>
+<button class="w-8 h-full flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons-round text-lg">add</span>
+</button>
+</div>
+<!-- Add to Cart Button -->
+<button class="flex-1 sm:flex-none w-full sm:w-64 h-12 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg shadow-lg shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group">
+<span class="material-icons-round group-hover:animate-bounce">shopping_cart</span>
+                        Add to Cart
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom spacing for sticky bar on mobile -->
+<div class="h-24 sm:hidden"></div>
+</body></html>

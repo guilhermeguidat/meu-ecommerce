@@ -54,7 +54,10 @@ public class AuthService {
                 .build();
 
         repository.save(user);
-        usuarioPublisher.publicar(new ParticipanteRepresentation(request.nome(), request.cpf(), request.dataNascimento(), user.getId()));
+        
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            usuarioPublisher.publicar(new ParticipanteRepresentation(request.nome(), request.cpf(), request.dataNascimento(), user.getId()));
+        });
 
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
 

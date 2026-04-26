@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>White-Label Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#135bec",
+                "primary-light": "#3b82f6", 
+                "primary-dark": "#1d4ed8",
+                "background-light": "#f6f6f8",
+                "background-dark": "#101622",
+                },
+                fontFamily: {
+                "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Mobile phone frame shadow */
+        .phone-shadow {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 
+                        0 0 0 12px #1f2937, 
+                        0 0 0 13px #000;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-200 min-h-screen flex flex-col">
+<!-- Navbar -->
+<nav class="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white">
+<span class="material-icons text-sm">storefront</span>
+</div>
+<span class="font-semibold text-lg tracking-tight">AppBuilder</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+<span class="material-icons">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img alt="User avatar" class="h-full w-full object-cover" data-alt="User profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjE7uYqxNAOjijkNQ2niugpCyfF1mPeph3FZxYE3wvSo-mvT77UAmsnBSeVPZaPJtn83wzoAVxnsTim8JZLIdit2X7RUvjPXw7jvaz8PzQO7ZtGtFY0KMcI7COyD16BQj1LhqpDThaoc0dapUrvR05VdYOaWX-ZBnY_n1Xzg60B-nOR83iZ1k7jtzkoCzctuTjgOyz9rLApeVIaRejnT7BCWEG-PWQdCDhLJU_vWi8XjuQdP_AjJbwAX6lBmIt1Wmzo9JiUasWLs5T"/>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+<!-- Header Section -->
+<div class="md:flex md:items-center md:justify-between mb-8">
+<div class="min-w-0 flex-1">
+<h2 class="text-2xl font-bold leading-7 text-slate-900 dark:text-white sm:truncate sm:text-3xl sm:tracking-tight">
+                    Store Customization
+                </h2>
+<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    Customize your mobile app's appearance to match your brand identity.
+                </p>
+</div>
+<div class="mt-4 flex md:ml-4 md:mt-0">
+<button class="inline-flex items-center rounded-lg bg-white dark:bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 mr-3" type="button">
+                    Discard
+                </button>
+<button class="inline-flex items-center rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors" type="button">
+                    Save Changes
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+<!-- Left Column: Settings Form -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Logo Upload Card -->
+<div class="bg-white dark:bg-slate-900 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 rounded-xl p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-base font-semibold leading-6 text-slate-900 dark:text-white">Store Logo</h3>
+<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">This will be displayed on the header of your mobile app.</p>
+</div>
+<span class="inline-flex items-center rounded-full bg-green-50 dark:bg-green-900/30 px-2 py-1 text-xs font-medium text-green-700 dark:text-green-400 ring-1 ring-inset ring-green-600/20">Active</span>
+</div>
+<div class="mt-2 flex justify-center rounded-lg border border-dashed border-slate-300 dark:border-slate-700 px-6 py-10 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
+<div class="text-center">
+<div class="mx-auto h-16 w-16 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-icons text-slate-400 dark:text-slate-500 text-3xl">image</span>
+</div>
+<div class="mt-4 flex text-sm leading-6 text-slate-600 dark:text-slate-400 justify-center">
+<label class="relative cursor-pointer rounded-md font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary/80" for="file-upload">
+<span>Upload a file</span>
+<input class="sr-only" id="file-upload" name="file-upload" type="file"/>
+</label>
+<p class="pl-1">or drag and drop</p>
+</div>
+<p class="text-xs leading-5 text-slate-500 dark:text-slate-500">PNG, JPG, GIF up to 2MB. Recommended 512x512px.</p>
+</div>
+</div>
+</div>
+<!-- Color Settings Card -->
+<div class="bg-white dark:bg-slate-900 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 rounded-xl p-6">
+<div class="mb-6">
+<h3 class="text-base font-semibold leading-6 text-slate-900 dark:text-white">Brand Colors</h3>
+<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Define your primary brand color. This will affect buttons, links, and accents.</p>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-white mb-2" for="primary-color">Primary Brand Color</label>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center">
+<div class="absolute left-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded border border-slate-200 shadow-sm" style="background-color: #135bec;"></div>
+<input class="block w-32 rounded-lg border-0 py-2.5 pl-10 pr-3 text-slate-900 dark:text-white ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 dark:bg-slate-800 font-mono uppercase" id="primary-color" name="primary-color" type="text" value="#135bec"/>
+</div>
+<input class="h-10 w-10 rounded cursor-pointer border-0 p-0 ring-1 ring-slate-200 dark:ring-slate-700" type="color" value="#135bec"/>
+<span class="text-xs text-slate-500 dark:text-slate-400">AA Contrast Ratio</span>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-white mb-3">Popular Presets</label>
+<div class="flex flex-wrap gap-3">
+<button aria-label="Select Blue" class="w-8 h-8 rounded-full bg-[#135bec] ring-2 ring-offset-2 ring-primary cursor-pointer hover:scale-110 transition-transform"></button>
+<button aria-label="Select Red" class="w-8 h-8 rounded-full bg-[#ef4444] hover:ring-2 hover:ring-offset-2 hover:ring-[#ef4444] cursor-pointer hover:scale-110 transition-transform"></button>
+<button aria-label="Select Emerald" class="w-8 h-8 rounded-full bg-[#10b981] hover:ring-2 hover:ring-offset-2 hover:ring-[#10b981] cursor-pointer hover:scale-110 transition-transform"></button>
+<button aria-label="Select Amber" class="w-8 h-8 rounded-full bg-[#f59e0b] hover:ring-2 hover:ring-offset-2 hover:ring-[#f59e0b] cursor-pointer hover:scale-110 transition-transform"></button>
+<button aria-label="Select Violet" class="w-8 h-8 rounded-full bg-[#8b5cf6] hover:ring-2 hover:ring-offset-2 hover:ring-[#8b5cf6] cursor-pointer hover:scale-110 transition-transform"></button>
+<button aria-label="Select Pink" class="w-8 h-8 rounded-full bg-[#ec4899] hover:ring-2 hover:ring-offset-2 hover:ring-[#ec4899] cursor-pointer hover:scale-110 transition-transform"></button>
+<button aria-label="Select Black" class="w-8 h-8 rounded-full bg-[#111827] hover:ring-2 hover:ring-offset-2 hover:ring-[#111827] cursor-pointer hover:scale-110 transition-transform"></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Typography Card (Optional add-on for fullness) -->
+<div class="bg-white dark:bg-slate-900 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 rounded-xl p-6 opacity-60 pointer-events-none grayscale">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-base font-semibold leading-6 text-slate-900 dark:text-white">Typography</h3>
+<span class="inline-flex items-center rounded-full bg-slate-100 dark:bg-slate-800 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-400">Pro Feature</span>
+</div>
+<div class="space-y-4">
+<div class="h-10 bg-slate-100 dark:bg-slate-800 rounded w-full"></div>
+<div class="h-10 bg-slate-100 dark:bg-slate-800 rounded w-3/4"></div>
+</div>
+</div>
+</div>
+<!-- Right Column: Live Preview -->
+<div class="lg:col-span-5 relative">
+<div class="sticky top-24 flex flex-col items-center">
+<div class="mb-4 flex items-center gap-2">
+<span class="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">Live Preview</span>
+</div>
+<!-- iPhone Mockup Frame -->
+<div class="relative w-[320px] h-[640px] bg-slate-900 rounded-[3rem] p-3 phone-shadow border-4 border-slate-800">
+<!-- Screen Content Container -->
+<div class="bg-white h-full w-full rounded-[2.25rem] overflow-hidden flex flex-col relative font-display">
+<!-- Status Bar (Mock) -->
+<div class="h-10 w-full bg-white flex justify-between items-end px-6 pb-2 text-[10px] font-medium text-black select-none z-10 sticky top-0">
+<span>9:41</span>
+<div class="flex gap-1.5 items-center">
+<span class="material-icons text-[14px]">signal_cellular_alt</span>
+<span class="material-icons text-[14px]">wifi</span>
+<span class="material-icons text-[14px]">battery_full</span>
+</div>
+</div>
+<!-- App Content -->
+<div class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 pb-16">
+<!-- App Header -->
+<div class="px-5 py-2 flex justify-between items-center bg-white sticky top-10 z-10 shadow-sm/50">
+<div class="font-bold text-lg text-slate-900 flex items-center gap-2">
+<div class="w-6 h-6 bg-slate-900 rounded-md flex items-center justify-center text-white text-xs">S</div>
+                                        Store
+                                    </div>
+<span class="material-icons text-slate-400">search</span>
+</div>
+<!-- Hero Banner -->
+<div class="mx-4 mt-4 h-32 rounded-2xl bg-slate-200 overflow-hidden relative">
+<img alt="Fashion model" class="w-full h-full object-cover" data-alt="Fashion collection banner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-s8HJt9ZYI1xXYzsjXJblop5fFCgzb5GRdzWFCQa3yjNZ2yqMspZ9mRw3HRB5c1-GvVrfnr1LmjnRue5toHgqqYvdqBjN4ei2JsrcwcuoOUu2S7ONlaTzCJ6WSATX8EV26OWpdh9ZpmTiiyXNMECal4cULJC182nTdBYvq-0ttWAp-Cz2A3V_RthxQ85V0Y_HLeO3NZkmEjqa0viwxYNYF_jIOeyKmCx_8SU_WxhPG2PSqhySnVrf2tKXgH4hByvWrfZL5Em6i4pV"/>
+<div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent flex items-center px-4">
+<div>
+<div class="text-white text-xs font-medium mb-1 opacity-90">New Collection</div>
+<div class="text-white text-xl font-bold leading-tight">Summer <br/>Essentials</div>
+</div>
+</div>
+</div>
+<!-- Categories -->
+<div class="mt-6">
+<div class="flex justify-between px-5 items-center mb-3">
+<h4 class="font-bold text-slate-900 text-sm">Categories</h4>
+<span class="text-xs font-medium text-primary cursor-pointer">See All</span>
+</div>
+<div class="flex gap-3 px-5 overflow-x-auto pb-2" style="scrollbar-width: none;">
+<div class="flex flex-col items-center gap-2 min-w-[60px]">
+<div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-icons text-xl">checkroom</span>
+</div>
+<span class="text-[10px] font-medium text-slate-600">Clothing</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[60px]">
+<div class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-icons text-xl">watch</span>
+</div>
+<span class="text-[10px] font-medium text-slate-500">Watches</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[60px]">
+<div class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-icons text-xl">hiking</span>
+</div>
+<span class="text-[10px] font-medium text-slate-500">Shoes</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[60px]">
+<div class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-icons text-xl">backpack</span>
+</div>
+<span class="text-[10px] font-medium text-slate-500">Bags</span>
+</div>
+</div>
+</div>
+<!-- Popular Products -->
+<div class="mt-4 px-5 pb-6">
+<h4 class="font-bold text-slate-900 text-sm mb-3">Popular Now</h4>
+<div class="grid grid-cols-2 gap-3">
+<!-- Product 1 -->
+<div class="bg-white rounded-xl p-2 shadow-sm border border-slate-100">
+<div class="aspect-[4/5] bg-slate-100 rounded-lg mb-2 relative overflow-hidden group">
+<img alt="Red Nike Shoes" class="w-full h-full object-cover" data-alt="Red sport sneaker on white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi_cVDZbnCIln3YJz0Kpqbnm5BSWSYksZSuxjA5vTKwHyagAcSlzCP4jPAdjPois57En9EMry4uPzlPlSRndP4K_uZ2Ib2xHh74L7PoIFdB0Wf97JKedo1y64_7EnctGt2SoSaD1-UnRwnZbC6rWxRYXZaS151Xw22nbN9UKodMbkFLPZ89C7n2wT9hE4DO1D-I-4yHt2IziVqb3fxjh4brP80E09WV6rWaVaBVWYbxugpTlFECJ8Oc-sNwUfvuVVGO0LVZZffysOs"/>
+<button class="absolute top-2 right-2 w-6 h-6 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-slate-400 shadow-sm">
+<span class="material-icons text-[14px]">favorite_border</span>
+</button>
+</div>
+<div class="px-1">
+<h5 class="font-medium text-xs text-slate-900 truncate">Nike Air Max</h5>
+<div class="flex justify-between items-center mt-1">
+<span class="font-bold text-sm text-slate-900">$129</span>
+<button class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white shadow-sm shadow-primary/30">
+<span class="material-icons text-[14px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="bg-white rounded-xl p-2 shadow-sm border border-slate-100">
+<div class="aspect-[4/5] bg-slate-100 rounded-lg mb-2 relative overflow-hidden group">
+<img alt="White Watch" class="w-full h-full object-cover" data-alt="Minimalist white wrist watch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGa2TxFYNe7p0MVK7hWHUrmhFqfezCRmzuadVQ-xhLEMIUC9Ww7y6S0KsrrEyD6QlcNQAudAOjE9KkvDq74LbbGZkzFIcjLgmXO4bve27OAoFUWAK6V9obcCvZZhTlCgymj-cmQ9lXtc8HFNp02-GcVtIVySbwgs4fFR0ZHLF9DqtZJ8T05Nw5xhGO57rBbVFb3--UYwU2Jih4f8QL-Kka62n8vP6aK7uqHg2X1WCzcQ6MyUHul28OA5Xc-QwX3_lJzYsxX4eCfBAy"/>
+<button class="absolute top-2 right-2 w-6 h-6 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-slate-400 shadow-sm">
+<span class="material-icons text-[14px]">favorite_border</span>
+</button>
+</div>
+<div class="px-1">
+<h5 class="font-medium text-xs text-slate-900 truncate">Analog Classic</h5>
+<div class="flex justify-between items-center mt-1">
+<span class="font-bold text-sm text-slate-900">$250</span>
+<button class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white shadow-sm shadow-primary/30">
+<span class="material-icons text-[14px]">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation -->
+<div class="h-16 bg-white border-t border-slate-100 flex justify-around items-center absolute bottom-0 w-full pb-2">
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-icons">home</span>
+<span class="text-[9px] font-medium">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons">search</span>
+<span class="text-[9px] font-medium">Search</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons">shopping_bag</span>
+<span class="text-[9px] font-medium">Cart</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons">person</span>
+<span class="text-[9px] font-medium">Profile</span>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-slate-900 rounded-full opacity-20"></div>
+</div>
+</div>
+<p class="mt-4 text-xs text-slate-500 dark:text-slate-400">Live preview (iPhone 14 frame)</p>
+</div>
+</div>
+</div>
+</main>
+</body></html>
