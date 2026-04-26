@@ -1,0 +1,36 @@
+### IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+### Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+### Logs and Profilers
+*.log
+*.log.txt
+*.jfr
+*.props
+captureAgent/
+hs_err_pid*
+
+### OS Files
+.DS_Store
+Thumbs.db
+
+### Infrastructure Volumes (Docker)
+servicos/database/data/
+servicos/bucket/docs/
+servicos/broker/data/
+servicos/broker/kafka/
+servicos/broker/secrets/
+servicos/broker/zookeeper/

@@ -1,0 +1,42 @@
+# Ambiente de desenvolvimento
+node_modules/
+dist/
+build/
+.npm/
+
+# IDEs e Editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Arquivos de Sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# -----------------
+# Flutter / Dart
+# -----------------
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# Web related
+lib/generated_plugin_registrant.dart
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
