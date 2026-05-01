@@ -30,6 +30,7 @@ public class MercadoPagoService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void processar(Map<String, Object> dados) {
 
         String type = (String) dados.get("type");

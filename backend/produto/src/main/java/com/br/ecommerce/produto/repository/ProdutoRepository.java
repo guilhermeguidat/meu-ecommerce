@@ -15,4 +15,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
         AND v.quantidade > 0
     """)
     List<Produto> findProdutosComEstoqueDisponivel();
+
+    @Query("SELECT DISTINCT p.categoria FROM Produto p WHERE p.categoria IS NOT NULL")
+    List<String> findDistinctCategorias();
 }

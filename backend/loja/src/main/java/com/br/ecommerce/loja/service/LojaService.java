@@ -37,15 +37,18 @@ public class LojaService {
             throw new LogoInvalidaException("logo", "Arquivo da logo inválido!");
         }
 
-        Loja loja = new Loja(ID_DEFAULT, lojaRequest.corPrimaria());
+        Loja loja = new Loja(ID_DEFAULT, lojaRequest.corPrimaria(), lojaRequest.banners());
         lojaRepository.save(loja);
 
-        return new LojaResponse(loja.getCorPrimaria(), bucketService.getUrl(ID_DEFAULT));
+        return new LojaResponse(loja.getCorPrimaria(), bucketService.getUrl(ID_DEFAULT), loja.getBanners());
     }
 
     public LojaResponse buscaConfig(){
         Loja loja = lojaRepository.findByid(ID_DEFAULT);
-        return new LojaResponse(loja.getCorPrimaria(), bucketService.getUrl(ID_DEFAULT));
+        if (loja == null) {
+            return new LojaResponse("#000000", null, java.util.List.of());
+        }
+        return new LojaResponse(loja.getCorPrimaria(), bucketService.getUrl(ID_DEFAULT), loja.getBanners());
     }
 
     private boolean verificaSeArquivoEImagem(MultipartFile arquivo){

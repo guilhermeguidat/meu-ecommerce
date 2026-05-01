@@ -5,6 +5,7 @@ import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/providers/login_provider.dart';
 import 'features/auth/presentation/providers/register_provider.dart';
+import 'features/admin/presentation/providers/admin_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => getIt<RegisterProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<AdminProvider>(),
         ),
       ],
       child: MaterialApp(

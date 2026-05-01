@@ -17,9 +17,9 @@ O foco principal do desenvolvimento é a interface (UI/UX) e integração via ch
 
 ---
 
-## 🟡 Fase 2: Experiência do Cliente (Storefront) - (Próximo Passo)
+## 🔴 Fase 2: Experiência do Cliente (Storefront)
 
-**Status Geral:** A iniciar.
+**Status Geral:** A iniciar (Aguardando Fase 5).
 
 - [ ] **Home Screen (Tela Inicial):**
   - Header moderno com área para logo customizável (White-Label).
@@ -69,9 +69,9 @@ O foco principal do desenvolvimento é a interface (UI/UX) e integração via ch
 
 ---
 
-## 🔴 Fase 5: Dashboard Admin/Lojista (Visão Mobile/Web)
+## 🟡 Fase 5: Dashboard Admin/Lojista (Visão Mobile/Web) - (Prioridade Atual)
 
-**Status Geral:** A iniciar.
+**Status Geral:** Em Andamento.
 
 - [ ] **Dashboard Principal:** 
   - Gráficos de vendas (gráficos de linha com design minimalista).

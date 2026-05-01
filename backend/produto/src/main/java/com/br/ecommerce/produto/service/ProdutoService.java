@@ -15,7 +15,7 @@ import com.br.ecommerce.produto.model.ProdutoVariacao;
 import com.br.ecommerce.produto.repository.ProdutoRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,14 +34,18 @@ public class ProdutoService {
     public ProdutoResponse criaProduto(ProdutoRequest produtoRequest){
         verificaEstoqueProdutoXVariacao(produtoRequest);
         Produto produto = produtoRepository.save(produtoMapper.map(produtoRequest));
-        try{
-            var file = new BucketFile(bucketService.retornaNomeProduto(produto.getId()), produtoRequest.imagem().getInputStream(), produtoRequest.imagem().getContentType(), produtoRequest.imagem().getSize());
-            bucketService.upload(file);
-        } catch(Exception e){
-            produtoRepository.delete(produto);
-            throw new FalhaAoSalvarImagemException("imagem", "Falha ao cadastrar produto: imagem inválida!");
+        
+        if (produtoRequest.imagem() != null && !produtoRequest.imagem().isEmpty()) {
+            try {
+                var file = new BucketFile(bucketService.retornaNomeProduto(produto.getId()), produtoRequest.imagem().getInputStream(), produtoRequest.imagem().getContentType(), produtoRequest.imagem().getSize());
+                bucketService.upload(file);
+                produto.setUrlImagem(bucketService.getUrl(produto.getId()));
+            } catch(Exception e){
+                produtoRepository.delete(produto);
+                throw new FalhaAoSalvarImagemException("imagem", "Falha ao cadastrar produto: imagem inválida!");
+            }
         }
-        produto.setUrlImagem(bucketService.getUrl(produto.getId()));
+        
         return produtoMapper.map(produto);
     }
 
@@ -92,6 +96,9 @@ public class ProdutoService {
         if(produtoRequest.valorUnitario() != null) {
             produto.setValorUnitario(produtoRequest.valorUnitario());
         }
+        if(produtoRequest.categoria() != null) {
+            produto.setCategoria(produtoRequest.categoria());
+        }
         if(produtoRequest.variacoes() != null) {
             produto.getVariacoes().clear();
             List<ProdutoVariacao> variacoes = produtoRequest.variacoes()
@@ -129,6 +136,10 @@ public class ProdutoService {
                 .toList();
     }
 
+    public List<String> buscaCategorias() {
+        return produtoRepository.findDistinctCategorias();
+    }
+
     private boolean verificaProdutoUtilizado(Long id){
         boolean produtoUtilizado = false;
         //Enviar para o serviço de pedidos uma requisição procurando se o produto está sendo utilizando
@@ -148,6 +159,10 @@ public class ProdutoService {
     }
 
     private void verificaEstoqueProdutoXVariacao(ProdutoRequest produtoRequest){
+        if (produtoRequest.variacoes() == null || produtoRequest.variacoes().isEmpty()) {
+            return;
+        }
+
         Integer qtdTotalVariacao = produtoRequest.variacoes().stream()
                 .mapToInt(ProdutoVariacaoDto::quantidade)
                 .sum();

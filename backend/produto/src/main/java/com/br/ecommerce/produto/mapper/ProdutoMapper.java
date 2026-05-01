@@ -5,6 +5,7 @@ import com.br.ecommerce.produto.dto.ProdutoResponse;
 import com.br.ecommerce.produto.model.Produto;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
@@ -13,6 +14,7 @@ public abstract class ProdutoMapper {
 
     public abstract ProdutoResponse map(Produto entity);
 
+    @Mapping(target = "urlImagem", ignore = true)
     public abstract Produto map(ProdutoRequest dto);
 
     @AfterMapping

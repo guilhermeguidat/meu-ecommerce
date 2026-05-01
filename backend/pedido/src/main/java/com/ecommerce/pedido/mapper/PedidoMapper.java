@@ -1,6 +1,6 @@
 package com.ecommerce.pedido.mapper;
 
-import com.ecommerce.pedido.dto.PedidoCriadoResponse;
+
 import com.ecommerce.pedido.dto.PedidoRequest;
 import com.ecommerce.pedido.model.*;
 import org.mapstruct.*;

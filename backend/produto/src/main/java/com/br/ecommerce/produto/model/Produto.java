@@ -26,4 +26,5 @@ public class Produto {
     private List<ProdutoVariacao> variacoes;
     @Transient
     private String urlImagem;
+    private String categoria;
 }

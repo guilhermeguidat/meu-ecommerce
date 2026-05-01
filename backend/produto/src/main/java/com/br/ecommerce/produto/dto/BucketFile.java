@@ -1,6 +1,6 @@
 package com.br.ecommerce.produto.dto;
 
-import org.springframework.http.MediaType;
+
 
 import java.io.InputStream;
 

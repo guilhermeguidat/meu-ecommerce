@@ -69,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     )
@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Image.network(
           'https://lh3.googleusercontent.com/aida-public/AB6AXuBme2-MJnj1ATv3oKp5ObM3Pa5Y6oId9XxXvZTWMM5AvL1gY0ooiBU8T3-r81tkto3upaFz2fRIPHT_IG0y5fU6t4NPvWPTbYyfltbS-xOWB3Ps22zFTVgeh4g4qvqkZJY9R14W5eBaI65lKw9Xdb7Ssb1wYIfFLMMYz4PPY3xrLCHNaql3T7Z7sUIgi0aNCDEPITjapqgKHPbUWUH9gyvbGYa-PVGvz80qX8UxaClVQ9U2jo9XcU84bZEOSJVnRAKo3Lw3OxXsCUvN',
           fit: BoxFit.cover,
-          color: isDark ? Colors.black.withOpacity(0.6) : Colors.white.withOpacity(0.1),
+          color: isDark ? Colors.black.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.1),
           colorBlendMode: isDark ? BlendMode.darken : BlendMode.lighten,
         ),
         // Overlays
@@ -115,7 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                AppColors.primary.withOpacity(0.9),
+                AppColors.primary.withValues(alpha: 0.9),
                 Colors.transparent,
               ],
             ),
@@ -127,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withOpacity(0.4),
+                Colors.black.withValues(alpha: 0.4),
                 Colors.transparent,
               ],
             ),
@@ -143,9 +143,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withOpacity(0.3)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
                 ),
                 child: const Icon(Icons.rocket_launch, color: Colors.white),
               ),
@@ -174,9 +174,9 @@ class _RegisterPageState extends State<RegisterPage> {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.white.withOpacity(0.2)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
                 ),
                 child: const Row(
                    children: [
@@ -250,9 +250,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.all(12),
                     margin: const EdgeInsets.only(bottom: 24),
                     decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
+                      color: Colors.red.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red.withOpacity(0.5)),
+                      border: Border.all(color: Colors.red.withValues(alpha: 0.5)),
                     ),
                     child: Row(
                       children: [
@@ -273,9 +273,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.all(12),
                     margin: const EdgeInsets.only(bottom: 24),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
+                      color: Colors.green.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.green.withOpacity(0.5)),
+                      border: Border.all(color: Colors.green.withValues(alpha: 0.5)),
                     ),
                     child: const Row(
                       children: [

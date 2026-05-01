@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ParticipanteMapper {
 
+    @org.mapstruct.Mapping(target = "name", source = "nome")
     ParticipanteResponse map(Participante participante);
+    @org.mapstruct.Mapping(target = "id", ignore = true)
     Participante map(ParticipanteRequest participanteRequest);
 }

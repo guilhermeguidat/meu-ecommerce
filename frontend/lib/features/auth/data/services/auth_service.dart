@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthService {
   final Dio dio;
@@ -74,4 +75,18 @@ class AuthService {
       throw Exception('Erro inesperado: $e');
     }
   }
+
+  Future<String?> getUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    if (token == null) return null;
+    
+    try {
+      final decodedToken = JwtDecoder.decode(token);
+      return decodedToken['role'] as String?;
+    } catch (e) {
+      return null;
+    }
+  }
 }
+

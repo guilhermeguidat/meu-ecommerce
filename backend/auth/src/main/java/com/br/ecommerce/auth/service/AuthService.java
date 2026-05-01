@@ -68,6 +68,33 @@ public class AuthService {
         );
     }
 
+    public LoginResponse registerAdmin(RegisterRequest request) {
+
+        if (verificaSeEmailExiste(request.email())) {
+            throw new EmailJaEmUsoException();
+        }
+
+        Usuario user = Usuario.builder()
+                .email(request.email())
+                .role(Role.ROLE_ADMIN)
+                .senha(encoder.encode(request.senha()))
+                .build();
+
+        repository.save(user);
+        
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            usuarioPublisher.publicar(new ParticipanteRepresentation(request.nome(), request.cpf(), request.dataNascimento(), user.getId()));
+        });
+
+        String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
+
+        return new LoginResponse(
+                user.getId(),
+                user.getEmail(),
+                token
+        );
+    }
+
     private boolean verificaSeEmailExiste(String email) {
         return repository.findByEmail(email).isPresent();
     }
