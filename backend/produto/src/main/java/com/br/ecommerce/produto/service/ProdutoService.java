@@ -34,18 +34,19 @@ public class ProdutoService {
     public ProdutoResponse criaProduto(ProdutoRequest produtoRequest){
         verificaEstoqueProdutoXVariacao(produtoRequest);
         Produto produto = produtoRepository.save(produtoMapper.map(produtoRequest));
-        
-        if (produtoRequest.imagem() != null && !produtoRequest.imagem().isEmpty()) {
+
+        if (produtoRequest.getImagem() != null && !produtoRequest.getImagem().isEmpty()) {
             try {
-                var file = new BucketFile(bucketService.retornaNomeProduto(produto.getId()), produtoRequest.imagem().getInputStream(), produtoRequest.imagem().getContentType(), produtoRequest.imagem().getSize());
+                var file = new BucketFile(bucketService.retornaNomeProduto(produto.getId()), produtoRequest.getImagem().getInputStream(), produtoRequest.getImagem().getContentType(), produtoRequest.getImagem().getSize());
                 bucketService.upload(file);
                 produto.setUrlImagem(bucketService.getUrl(produto.getId()));
+                produtoRepository.save(produto);
             } catch(Exception e){
-                produtoRepository.delete(produto);
-                throw new FalhaAoSalvarImagemException("imagem", "Falha ao cadastrar produto: imagem inválida!");
+                // Upload de imagem falhou (ex: MinIO indisponível). Produto salvo sem imagem.
+                System.err.println("[ProdutoService] Aviso: falha ao fazer upload da imagem para o produto " + produto.getId() + ": " + e.getMessage());
             }
         }
-        
+
         return produtoMapper.map(produto);
     }
 
@@ -73,35 +74,35 @@ public class ProdutoService {
     @Transactional
     public ProdutoResponse alteraProduto(ProdutoRequest produtoRequest){
         verificaEstoqueProdutoXVariacao(produtoRequest);
-        Produto produto = produtoRepository.findById(produtoRequest.id())
-                .orElseThrow(() -> new ProdutoNaoEcontradoException("id", String.format("Produto não encontrado com o código informado! Código: %s", produtoRequest.id().toString())));
+        Produto produto = produtoRepository.findById(produtoRequest.getId())
+                .orElseThrow(() -> new ProdutoNaoEcontradoException("id", String.format("Produto não encontrado com o código informado! Código: %s", produtoRequest.getId().toString())));
 
-        if(produtoRequest.imagem() != null){
-            if(!verificaSeArquivoEImagem(produtoRequest.imagem())) throw new FalhaAoSalvarImagemException("imagem", "Falha ao cadastrar produto: imagem inválida!");
+        if(produtoRequest.getImagem() != null){
+            if(!verificaSeArquivoEImagem(produtoRequest.getImagem())) throw new FalhaAoSalvarImagemException("imagem", "Falha ao cadastrar produto: imagem inválida!");
             try{
                 bucketService.delete(produto.getId());
-                var file = new BucketFile(bucketService.retornaNomeProduto(produto.getId()), produtoRequest.imagem().getInputStream(), produtoRequest.imagem().getContentType(), produtoRequest.imagem().getSize());
+                var file = new BucketFile(bucketService.retornaNomeProduto(produto.getId()), produtoRequest.getImagem().getInputStream(), produtoRequest.getImagem().getContentType(), produtoRequest.getImagem().getSize());
                 produto.setUrlImagem(bucketService.getUrl(produto.getId()));
                 bucketService.upload(file);
             } catch (Exception e){
                 throw new FalhaAoSalvarImagemException("imagem", "Falha ao cadastrar produto: imagem inválida!");
             }
         }
-        if(produtoRequest.descricao() != null) {
-            produto.setDescricao(produtoRequest.descricao());
+        if(produtoRequest.getDescricao() != null) {
+            produto.setDescricao(produtoRequest.getDescricao());
         }
-        if(produtoRequest.quantidade() != null) {
-            produto.setQuantidade(produtoRequest.quantidade());
+        if(produtoRequest.getQuantidade() != null) {
+            produto.setQuantidade(produtoRequest.getQuantidade());
         }
-        if(produtoRequest.valorUnitario() != null) {
-            produto.setValorUnitario(produtoRequest.valorUnitario());
+        if(produtoRequest.getValorUnitario() != null) {
+            produto.setValorUnitario(produtoRequest.getValorUnitario());
         }
-        if(produtoRequest.categoria() != null) {
-            produto.setCategoria(produtoRequest.categoria());
+        if(produtoRequest.getCategoria() != null) {
+            produto.setCategoria(produtoRequest.getCategoria());
         }
-        if(produtoRequest.variacoes() != null) {
+        if(produtoRequest.getVariacoes() != null) {
             produto.getVariacoes().clear();
-            List<ProdutoVariacao> variacoes = produtoRequest.variacoes()
+            List<ProdutoVariacao> variacoes = produtoRequest.getVariacoes()
                     .stream().map(produtoVariacaoMapper::map).toList();
             variacoes.forEach(variacao -> {
                 variacao.setProduto(produto);
@@ -159,15 +160,15 @@ public class ProdutoService {
     }
 
     private void verificaEstoqueProdutoXVariacao(ProdutoRequest produtoRequest){
-        if (produtoRequest.variacoes() == null || produtoRequest.variacoes().isEmpty()) {
+        if (produtoRequest.getVariacoes() == null || produtoRequest.getVariacoes().isEmpty()) {
             return;
         }
 
-        Integer qtdTotalVariacao = produtoRequest.variacoes().stream()
-                .mapToInt(ProdutoVariacaoDto::quantidade)
+        Integer qtdTotalVariacao = produtoRequest.getVariacoes().stream()
+                .mapToInt(ProdutoVariacaoDto::getQuantidade)
                 .sum();
 
-        if(produtoRequest.quantidade() < qtdTotalVariacao){
+        if(produtoRequest.getQuantidade() < qtdTotalVariacao){
             throw new EstoqueInvalidoException("quantidade", "Quantidade informada para as variações é maior que o estoque total do produto!");
         }
     }

@@ -5,7 +5,7 @@ services:
     image: minio/minio:latest
     container_name: minio-ecommerce
     ports:
-      - "9100:9000"
+      - "9110:9000"
       - "9002:9001"
     volumes:
       - ./docs:/data

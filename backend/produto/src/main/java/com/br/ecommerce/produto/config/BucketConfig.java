@@ -13,10 +13,11 @@ public class BucketConfig {
     MinioProps minioProps;
 
     @Bean
-    public MinioClient bucketClient(){
+    public MinioClient bucketClient() {
         return MinioClient.builder()
                 .endpoint(minioProps.getUrl())
                 .credentials(minioProps.getAccessKey(), minioProps.getSecretKey())
                 .build();
     }
 }
+

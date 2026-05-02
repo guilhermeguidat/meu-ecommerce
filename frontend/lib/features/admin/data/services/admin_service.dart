@@ -1,6 +1,8 @@
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import '../models/loja_model.dart';
 import '../models/produto_model.dart';
+import '../models/produto_variacao_model.dart';
 
 class AdminService {
   final Dio dio;
@@ -11,7 +13,7 @@ class AdminService {
     try {
       final response = await dio.get('/loja');
       return LojaModel.fromJson(response.data);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Erro ao buscar configurações da loja: $e');
     }
   }
@@ -30,7 +32,7 @@ class AdminService {
 
       final response = await dio.put('/loja', data: formData);
       return LojaModel.fromJson(response.data);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Erro ao atualizar configurações da loja: $e');
     }
   }
@@ -40,17 +42,51 @@ class AdminService {
       final response = await dio.get('/produto/buscaTodos');
       final List<dynamic> data = response.data;
       return data.map((json) => ProdutoModel.fromJson(json)).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Erro ao buscar produtos: $e');
     }
   }
 
-  Future<ProdutoModel> createProduto(Map<String, dynamic> data) async {
+  Future<ProdutoModel> createProduto({
+    required String descricao,
+    required double valorUnitario,
+    required int quantidade,
+    String? categoria,
+    Uint8List? imagemBytes,
+    String? imagemNome,
+    List<ProdutoVariacaoModel> variacoes = const [],
+  }) async {
     try {
-      final formData = FormData.fromMap(data);
+      final fields = <String, dynamic>{
+        'descricao': descricao,
+        'valorUnitario': valorUnitario,
+        'quantidade': quantidade,
+      };
+
+      if (categoria != null && categoria.isNotEmpty) {
+        fields['categoria'] = categoria;
+      }
+
+      // Add variations as indexed form fields
+      for (var i = 0; i < variacoes.length; i++) {
+        final v = variacoes[i];
+        fields['variacoes[$i].tamanho'] = v.tamanho;
+        fields['variacoes[$i].cor'] = v.cor;
+        fields['variacoes[$i].quantidade'] = v.quantidade;
+      }
+
+      final formData = FormData.fromMap(fields);
+
+      // Cria MultipartFile fresh aqui para nunca reutilizar um stream já finalizado
+      if (imagemBytes != null && imagemNome != null) {
+        formData.files.add(
+          MapEntry('imagem', MultipartFile.fromBytes(imagemBytes, filename: imagemNome)),
+        );
+      }
+
       final response = await dio.post('/produto', data: formData);
       return ProdutoModel.fromJson(response.data);
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Erro ao criar produto: $e');
     }
   }
@@ -58,7 +94,7 @@ class AdminService {
   Future<void> deleteProduto(int id) async {
     try {
       await dio.delete('/produto/$id');
-    } catch (e) {
+    } on Exception catch (e) {
       throw Exception('Erro ao excluir produto: $e');
     }
   }
