@@ -58,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final adminProvider = context.watch<AdminProvider>();
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -91,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     if (isDesktop)
                       Expanded(
-                        child: _buildLeftBrandArea(theme, isDark),
+                        child: _buildLeftBrandArea(theme, isDark, adminProvider),
                       ),
                     Expanded(
                       child: _buildRightLoginForm(context, isDark),
@@ -106,155 +107,28 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLeftBrandArea(ThemeData theme, bool isDark) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // Background Image
-        Image.network(
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuBme2-MJnj1ATv3oKp5ObM3Pa5Y6oId9XxXvZTWMM5AvL1gY0ooiBU8T3-r81tkto3upaFz2fRIPHT_IG0y5fU6t4NPvWPTbYyfltbS-xOWB3Ps22zFTVgeh4g4qvqkZJY9R14W5eBaI65lKw9Xdb7Ssb1wYIfFLMMYz4PPY3xrLCHNaql3T7Z7sUIgi0aNCDEPITjapqgKHPbUWUH9gyvbGYa-PVGvz80qX8UxaClVQ9U2jo9XcU84bZEOSJVnRAKo3Lw3OxXsCUvN',
-          fit: BoxFit.cover,
-          color: isDark ? Colors.black.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.1),
-          colorBlendMode: isDark ? BlendMode.darken : BlendMode.lighten,
-        ),
-        // Overlays
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                theme.primaryColor.withValues(alpha: 0.9),
-                Colors.transparent,
-              ],
-            ),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withValues(alpha: 0.3),
-                Colors.transparent,
-              ],
-            ),
-          ),
-        ),
-        // Content
-        Padding(
-          padding: const EdgeInsets.all(48.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
-                ),
-                child: const Icon(Icons.storefront, color: Colors.white),
-              ),
-              const Spacer(),
-              const Text(
-                'Gerencie sua loja sem complicações.',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Experimente a próxima geração de gestão de e-commerce. Poderoso, intuitivo e projetado para crescer.',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white70,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 48),
-              // Glassmorphism Review Card
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        ...List.generate(
-                          5,
-                          (_) => const Icon(Icons.star, color: Colors.orangeAccent, size: 16),
-                        ),
-                        const SizedBox(width: 16),
-                        const Text(
-                          'Confiado por mais de 10 mil marcas',
-                          style: TextStyle(
-                            color: Colors.white60,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      '"O dashboard de análise transformou completamente como acompanhamos nosso estoque. Um verdadeiro divisor de águas."',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 2),
-                            image: const DecorationImage(
-                              image: NetworkImage('https://lh3.googleusercontent.com/aida-public/AB6AXuCvi9p7QSXkuVKqE2yWqEcVZpziJo00vsxGpyqTXhNGPQZPlHgJsqejeAu4xCLi8xi0Ucrzw4NNT0vIUh6I6V4qGTFlz5H-8COXWuIbBP6hDa_S3jPOhqtiuZxXEjAm_PAKNV_pVXCbmslll1Bl9xFqva60nLwrVP0dP-R9fPZ2Xj0yoYoLCseUmUc7qwHXa2BEuGgBlRuGJpauoHrMHCZxTfJafPmZx8LhVIbFhLl65Uw8rcK9ThnTE109ozdGukTKwsGQnZ1kqnfW'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Alex Morgan',
-                              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              'CEO, URBAN OUTFITTERS',
-                              style: TextStyle(color: Colors.white60, fontSize: 10, letterSpacing: 1),
-                            ),
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
+  Widget _buildLeftBrandArea(ThemeData theme, bool isDark, AdminProvider adminProvider) {
+    final imageUrl = adminProvider.loja?.urlImagemLogin;
+
+    return Container(
+      color: theme.primaryColor.withValues(alpha: 0.1),
+      child: imageUrl != null && imageUrl.isNotEmpty
+          ? Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => _buildFallbackBrandArea(theme),
+            )
+          : _buildFallbackBrandArea(theme),
+    );
+  }
+
+  Widget _buildFallbackBrandArea(ThemeData theme) {
+    return Center(
+      child: Icon(
+        Icons.storefront,
+        size: 120,
+        color: theme.primaryColor.withValues(alpha: 0.3),
+      ),
     );
   }
 

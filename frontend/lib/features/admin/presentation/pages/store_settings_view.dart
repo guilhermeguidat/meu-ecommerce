@@ -22,6 +22,16 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
   final List<Uint8List> _bannerBytes = [];
   final List<String> _bannerNames = [];
 
+  // Logo da Empresa
+  Uint8List? _logoBytes;
+  String? _logoName;
+  String? _urlLogoExistente;
+
+  // Imagem de Login
+  Uint8List? _imagemLoginBytes;
+  String? _imagemLoginName;
+  String? _urlImagemLoginExistente;
+
   // URLs dos banners já salvos no servidor (carregados via getLojaConfig)
   List<String> _bannersExistentes = [];
 
@@ -33,6 +43,8 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
       _corPrimariaController.text = provider.loja!.corPrimaria;
       _nomeController.text = provider.loja!.nome;
       _bannersExistentes = List.from(provider.loja!.banners);
+      _urlLogoExistente = provider.loja!.urlLogo;
+      _urlImagemLoginExistente = provider.loja!.urlImagemLogin;
       try {
         _pickerColor = _parseColor(provider.loja!.corPrimaria);
       } catch (_) {}
@@ -145,6 +157,56 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
     });
   }
 
+  Future<void> _pickLogo() async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(source: ImageSource.gallery, maxWidth: 1920, imageQuality: 85);
+      if (picked == null) return;
+      
+      final bytes = await picked.readAsBytes();
+      setState(() {
+        _logoBytes = bytes;
+        _logoName = picked.name;
+      });
+    } on Exception catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao selecionar imagem: $e')));
+      }
+    }
+  }
+
+  void _removeLogoNovo() {
+    setState(() {
+      _logoBytes = null;
+      _logoName = null;
+    });
+  }
+
+  Future<void> _pickImagemLogin() async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(source: ImageSource.gallery, maxWidth: 1920, imageQuality: 85);
+      if (picked == null) return;
+      
+      final bytes = await picked.readAsBytes();
+      setState(() {
+        _imagemLoginBytes = bytes;
+        _imagemLoginName = picked.name;
+      });
+    } on Exception catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao selecionar imagem: $e')));
+      }
+    }
+  }
+
+  void _removeImagemLoginNovo() {
+    setState(() {
+      _imagemLoginBytes = null;
+      _imagemLoginName = null;
+    });
+  }
+
   void _saveSettings() {
     final cor = _corPrimariaController.text.trim();
     final nome = _nomeController.text.trim();
@@ -165,6 +227,10 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
       nome: nome,
       bannerBytes: _bannerBytes.isNotEmpty ? List.from(_bannerBytes) : null,
       bannerNames: _bannerNames.isNotEmpty ? List.from(_bannerNames) : null,
+      logoBytes: _logoBytes,
+      logoName: _logoName,
+      imagemLoginBytes: _imagemLoginBytes,
+      imagemLoginName: _imagemLoginName,
     );
   }
 
@@ -304,11 +370,67 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
                         controller: _corPrimariaController,
                         decoration: const InputDecoration(
                           hintText: 'Ex: #135BEC',
-                          prefixIcon: Icon(Icons.tag, size: 18),
+                          prefixIcon: Icon(Icons.color_lens_outlined, size: 18),
                         ),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 28),
+
+                // ---- Logo da Empresa ----
+                const Text('Logo da Empresa', style: TextStyle(fontWeight: FontWeight.w500)),
+                const SizedBox(height: 12),
+                if (_urlLogoExistente != null && _logoBytes == null) ...[
+                  _buildSectionLabel(theme, 'Logo Atual', isDark),
+                  const SizedBox(height: 8),
+                  _buildPreviewExistenteCard(_urlLogoExistente!, isDark),
+                  const SizedBox(height: 16),
+                ],
+                if (_logoBytes != null) ...[
+                  _buildSectionLabel(theme, 'Nova Logo Selecionada', isDark),
+                  const SizedBox(height: 8),
+                  _buildPreviewNovoCard(theme, isDark, _logoBytes!, _logoName, _removeLogoNovo),
+                  const SizedBox(height: 12),
+                ],
+                OutlinedButton.icon(
+                  onPressed: _pickLogo,
+                  icon: const Icon(Icons.image_outlined, size: 18),
+                  label: const Text('Selecionar Logo'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: theme.primaryColor,
+                    side: BorderSide(color: theme.primaryColor.withValues(alpha: 0.4)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  ),
+                ),
+                const SizedBox(height: 28),
+
+                // ---- Imagem de Login ----
+                const Text('Imagem da Tela de Login', style: TextStyle(fontWeight: FontWeight.w500)),
+                const SizedBox(height: 12),
+                if (_urlImagemLoginExistente != null && _imagemLoginBytes == null) ...[
+                  _buildSectionLabel(theme, 'Imagem Atual', isDark),
+                  const SizedBox(height: 8),
+                  _buildPreviewExistenteCard(_urlImagemLoginExistente!, isDark),
+                  const SizedBox(height: 16),
+                ],
+                if (_imagemLoginBytes != null) ...[
+                  _buildSectionLabel(theme, 'Nova Imagem Selecionada', isDark),
+                  const SizedBox(height: 8),
+                  _buildPreviewNovoCard(theme, isDark, _imagemLoginBytes!, _imagemLoginName, _removeImagemLoginNovo),
+                  const SizedBox(height: 12),
+                ],
+                OutlinedButton.icon(
+                  onPressed: _pickImagemLogin,
+                  icon: const Icon(Icons.add_photo_alternate_outlined, size: 18),
+                  label: const Text('Selecionar Imagem'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: theme.primaryColor,
+                    side: BorderSide(color: theme.primaryColor.withValues(alpha: 0.4)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  ),
                 ),
                 const SizedBox(height: 28),
 
@@ -472,6 +594,79 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
           right: 4,
           child: GestureDetector(
             onTap: () => _removeBannerNovo(index),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.red[600],
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.close, color: Colors.white, size: 14),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPreviewExistenteCard(String url, bool isDark) {
+    return Container(
+      width: 180,
+      height: 110,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: isDark ? AppColors.borderDark : AppColors.borderLight),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => Container(
+          color: isDark ? Colors.white10 : const Color(0xFFF1F5F9),
+          child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPreviewNovoCard(ThemeData theme, bool isDark, Uint8List bytes, String? name, VoidCallback onRemove) {
+    return Stack(
+      children: [
+        Container(
+          width: 180,
+          height: 110,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: theme.primaryColor.withValues(alpha: 0.5), width: 1.5),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.memory(bytes, fit: BoxFit.cover),
+              Container(
+                alignment: Alignment.bottomLeft,
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.transparent, Colors.black54],
+                  ),
+                ),
+                child: Text(
+                  name ?? 'Imagem selecionada',
+                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 4,
+          right: 4,
+          child: GestureDetector(
+            onTap: onRemove,
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(

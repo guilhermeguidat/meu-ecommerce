@@ -30,6 +30,8 @@ class AdminService {
     List<String>? bannerNames,
     Uint8List? logoBytes,
     String? logoName,
+    Uint8List? imagemLoginBytes,
+    String? imagemLoginName,
   }) async {
     try {
       final formData = FormData.fromMap({
@@ -44,6 +46,17 @@ class AdminService {
             logoBytes,
             filename: logoName,
             contentType: _mimeTypeFromName(logoName),
+          ),
+        ));
+      }
+
+      if (imagemLoginBytes != null && imagemLoginName != null) {
+        formData.files.add(MapEntry(
+          'imagemLogin',
+          MultipartFile.fromBytes(
+            imagemLoginBytes,
+            filename: imagemLoginName,
+            contentType: _mimeTypeFromName(imagemLoginName),
           ),
         ));
       }

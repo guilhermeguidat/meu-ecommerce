@@ -44,6 +44,21 @@ public class LojaService {
             }
         }
 
+        boolean imagemLoginEnviada = lojaRequest.imagemLogin() != null && !lojaRequest.imagemLogin().isEmpty();
+
+        if (imagemLoginEnviada) {
+            if (!verificaSeArquivoEImagem(lojaRequest.imagemLogin())) throw new LogoInvalidaException("imagemLogin", "Arquivo da imagem de login deve ser uma imagem");
+            try {
+                bucketService.deleteImagemLogin(ID_DEFAULT);
+                bucketService.upload(new BucketFile(bucketService.retornaNomeImagemLogin(ID_DEFAULT),
+                        lojaRequest.imagemLogin().getInputStream(),
+                        lojaRequest.imagemLogin().getContentType(),
+                        lojaRequest.imagemLogin().getSize()));
+            } catch (Exception e) {
+                throw new LogoInvalidaException("imagemLogin", "Arquivo da imagem de login inválido!");
+            }
+        }
+
         List<String> bannerUrls = new ArrayList<>();
         var bannerFiles = lojaRequest.bannerFiles();
 
@@ -90,20 +105,21 @@ public class LojaService {
         lojaRepository.save(loja);
 
         String logoUrl = logoEnviada ? bucketService.getUrl(ID_DEFAULT) : null;
+        String imagemLoginUrl = imagemLoginEnviada ? bucketService.getUrlImagemLogin(ID_DEFAULT) : null;
 
         if (bannerFiles != null && !bannerFiles.isEmpty()) {
-            return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), logoUrl, bannerUrls);
+            return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), logoUrl, imagemLoginUrl, bannerUrls);
         }
-        return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), logoUrl, recuperaUrlsBanners(bannersRaw));
+        return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), logoUrl, imagemLoginUrl, recuperaUrlsBanners(bannersRaw));
     }
 
     public LojaResponse buscaConfig(){
         Loja loja = lojaRepository.findById(ID_DEFAULT).orElse(null);
         if (loja == null) {
-            return new LojaResponse("#000000", "Meu Ecommerce", null, List.of());
+            return new LojaResponse("#000000", "Meu Ecommerce", null, null, List.of());
         }
         var bannerUrls = recuperaUrlsBanners(loja.getBannersRaw());
-        return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), bucketService.getUrl(ID_DEFAULT), bannerUrls);
+        return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), bucketService.getUrl(ID_DEFAULT), bucketService.getUrlImagemLogin(ID_DEFAULT), bannerUrls);
     }
 
     private List<String> recuperaUrlsBanners(String bannersRaw) {

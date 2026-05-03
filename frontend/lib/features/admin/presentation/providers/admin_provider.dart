@@ -80,6 +80,8 @@ class AdminProvider extends ChangeNotifier {
     List<String>? bannerNames,
     Uint8List? logoBytes,
     String? logoName,
+    Uint8List? imagemLoginBytes,
+    String? imagemLoginName,
   }) async {
     _isLoading = true;
     _errorMessage = null;
@@ -93,6 +95,8 @@ class AdminProvider extends ChangeNotifier {
         bannerNames: bannerNames,
         logoBytes: logoBytes,
         logoName: logoName,
+        imagemLoginBytes: imagemLoginBytes,
+        imagemLoginName: imagemLoginName,
       );
       _updateGlobalTheme();
     } on Exception catch (e) {

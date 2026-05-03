@@ -34,6 +34,10 @@ public class BucketService {
         return getUrlByObjectName(retornaNomeLogo(idLoja));
     }
 
+    public String getUrlImagemLogin(String idLoja){
+        return getUrlByObjectName(retornaNomeImagemLogin(idLoja));
+    }
+
     public String getUrlBanner(String idLoja, int index){
         return getUrlByObjectName(retornaNomeBanner(idLoja, index));
     }
@@ -42,12 +46,20 @@ public class BucketService {
         deleteByObjectName(retornaNomeLogo(idLoja));
     }
 
+    public void deleteImagemLogin(String idLoja) {
+        deleteByObjectName(retornaNomeImagemLogin(idLoja));
+    }
+
     public void deleteBanner(String idLoja, int index) {
         deleteByObjectName(retornaNomeBanner(idLoja, index));
     }
 
     public String retornaNomeLogo(String idLoja) {
         return String.format("logo-%s", idLoja);
+    }
+
+    public String retornaNomeImagemLogin(String idLoja) {
+        return String.format("login-%s", idLoja);
     }
 
     public String retornaNomeBanner(String idLoja, int index) {

@@ -1,13 +1,15 @@
 class LojaModel {
   final String corPrimaria;
   final String nome;
-  final String urlLogo;
+  final String? urlLogo;
+  final String? urlImagemLogin;
   final List<String> banners;
 
   LojaModel({
     required this.corPrimaria,
     required this.nome,
     required this.urlLogo,
+    this.urlImagemLogin,
     required this.banners,
   });
 
@@ -15,8 +17,9 @@ class LojaModel {
     return LojaModel(
       corPrimaria: json['corPrimaria'] ?? '',
       nome: json['nome'] ?? 'Meu Ecommerce',
-      urlLogo: json['urlLogo'] ?? '',
-      banners: json['banners'] != null ? List<String>.from(json['banners']) : [],
+      urlLogo: json['urlLogo'],
+      urlImagemLogin: json['urlImagemLogin'],
+      banners: (json['banners'] as List<dynamic>? ?? []).map((e) => e.toString()).toList(),
     );
   }
 
@@ -24,7 +27,8 @@ class LojaModel {
     return {
       'corPrimaria': corPrimaria,
       'nome': nome,
-      'urlLogo': urlLogo,
+      if (urlLogo != null) 'urlLogo': urlLogo,
+      if (urlImagemLogin != null) 'urlImagemLogin': urlImagemLogin,
       'banners': banners,
     };
   }
