@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import '../../data/models/loja_model.dart';
 import '../../data/models/produto_model.dart';
@@ -39,14 +40,27 @@ class AdminProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateStoreConfig(String corPrimaria, List<String> banners, {dynamic logoFile}) async {
+  Future<void> updateStoreConfig({
+    required String corPrimaria,
+    List<Uint8List>? bannerBytes,
+    List<String>? bannerNames,
+    Uint8List? logoBytes,
+    String? logoName,
+  }) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      _loja = await adminService.updateLojaConfig(corPrimaria, banners, logoFile: logoFile);
-    } catch (e) {
+      _loja = await adminService.updateLojaConfig(
+        corPrimaria: corPrimaria,
+        bannerBytes: bannerBytes,
+        bannerNames: bannerNames,
+        logoBytes: logoBytes,
+        logoName: logoName,
+      );
+    } on Exception catch (e) {
+      print('[AdminProvider] Erro ao atualizar loja: $e');
       _errorMessage = e.toString();
     } finally {
       _isLoading = false;

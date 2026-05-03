@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import '../models/loja_model.dart';
 import '../models/produto_model.dart';
 import '../models/produto_variacao_model.dart';
@@ -18,22 +19,64 @@ class AdminService {
     }
   }
 
-  Future<LojaModel> updateLojaConfig(String corPrimaria, List<String> banners, {dynamic logoFile}) async {
+  Future<LojaModel> updateLojaConfig({
+    required String corPrimaria,
+    List<Uint8List>? bannerBytes,
+    List<String>? bannerNames,
+    Uint8List? logoBytes,
+    String? logoName,
+  }) async {
     try {
       final formData = FormData.fromMap({
         'corPrimaria': corPrimaria,
-        'banners': banners,
       });
 
-      if (logoFile != null) {
-        // Logo handling (assuming it's a MultipartFile from image_picker)
-        // formData.files.add(MapEntry('logo', logoFile));
+      if (logoBytes != null && logoName != null) {
+        formData.files.add(MapEntry(
+          'logo',
+          MultipartFile.fromBytes(
+            logoBytes,
+            filename: logoName,
+            contentType: _mimeTypeFromName(logoName),
+          ),
+        ));
+      }
+
+      if (bannerBytes != null && bannerBytes.isNotEmpty) {
+        for (int i = 0; i < bannerBytes.length; i++) {
+          final name = (bannerNames != null && i < bannerNames.length) ? bannerNames[i] : 'banner_$i.jpg';
+          formData.files.add(MapEntry(
+            'bannerFiles',
+            MultipartFile.fromBytes(
+              bannerBytes[i],
+              filename: name,
+              contentType: _mimeTypeFromName(name),
+            ),
+          ));
+        }
       }
 
       final response = await dio.put('/loja', data: formData);
       return LojaModel.fromJson(response.data);
+    } on DioException catch (e) {
+      print('[AdminService] updateLojaConfig erro ${e.response?.statusCode}: ${e.response?.data}');
+      throw Exception('Erro ao atualizar configurações da loja: ${e.response?.data ?? e.message}');
     } on Exception catch (e) {
       throw Exception('Erro ao atualizar configurações da loja: $e');
+    }
+  }
+
+  MediaType _mimeTypeFromName(String filename) {
+    final ext = filename.toLowerCase().split('.').last;
+    switch (ext) {
+      case 'png':
+        return MediaType('image', 'png');
+      case 'webp':
+        return MediaType('image', 'webp');
+      case 'gif':
+        return MediaType('image', 'gif');
+      default:
+        return MediaType('image', 'jpeg');
     }
   }
 

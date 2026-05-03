@@ -31,34 +31,55 @@ public class BucketService {
     }
 
     public String getUrl(String idLoja){
-        try{
-            var obejct = GetPresignedObjectUrlArgs
-                    .builder()
-                    .method(Method.GET)
-                    .bucket(minioProps.getBucketName())
-                    .object(retornaNomeLogo(idLoja))
-                    .expiry(1, TimeUnit.DAYS)
-                    .build();
+        return getUrlByObjectName(retornaNomeLogo(idLoja));
+    }
 
-            return minioClient.getPresignedObjectUrl(obejct);
-        } catch(Exception e){
-            return "";
-        }
+    public String getUrlBanner(String idLoja, int index){
+        return getUrlByObjectName(retornaNomeBanner(idLoja, index));
     }
 
     public void delete(String idLoja) {
-        try {
-            var args = RemoveObjectArgs
-                    .builder()
-                    .bucket(minioProps.getBucketName())
-                    .object(retornaNomeLogo(idLoja))
-                    .build();
+        deleteByObjectName(retornaNomeLogo(idLoja));
+    }
 
-            minioClient.removeObject(args);
-        } catch (Exception ignored) {}
+    public void deleteBanner(String idLoja, int index) {
+        deleteByObjectName(retornaNomeBanner(idLoja, index));
     }
 
     public String retornaNomeLogo(String idLoja) {
         return String.format("logo-%s", idLoja);
     }
+
+    public String retornaNomeBanner(String idLoja, int index) {
+        return String.format("banner-%s-%d", idLoja, index);
+    }
+
+    private String getUrlByObjectName(String objectName){
+        try{
+            var object = GetPresignedObjectUrlArgs
+                    .builder()
+                    .method(Method.GET)
+                    .bucket(minioProps.getBucketName())
+                    .object(objectName)
+                    .expiry(1, TimeUnit.DAYS)
+                    .build();
+
+            return minioClient.getPresignedObjectUrl(object);
+        } catch(Exception e){
+            return "";
+        }
+    }
+
+    private void deleteByObjectName(String objectName) {
+        try {
+            var args = RemoveObjectArgs
+                    .builder()
+                    .bucket(minioProps.getBucketName())
+                    .object(objectName)
+                    .build();
+
+            minioClient.removeObject(args);
+        } catch (Exception ignored) {}
+    }
 }
+

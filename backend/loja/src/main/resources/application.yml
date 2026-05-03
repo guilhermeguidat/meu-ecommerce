@@ -19,7 +19,7 @@ spring:
         format_sql: true
 
 minio:
-  url: 'http://localhost:9100'
+  url: 'http://localhost:9110'
   access-key: minioadmin
   secret-key: minioadmin
   bucket-name: ecommerce.loja
