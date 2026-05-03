@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/core/theme/theme_provider.dart';
+import 'package:frontend/features/admin/data/models/produto_variacao_model.dart';
 import '../../../../core/utils/log.dart';
 import '../../data/models/loja_model.dart';
 import '../../data/models/produto_model.dart';
@@ -117,6 +118,46 @@ class AdminProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _errorMessage = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateProduto({
+    required int id,
+    required String descricao,
+    required double valorUnitario,
+    required int quantidade,
+    String? categoria,
+    Uint8List? imagemBytes,
+    String? imagemNome,
+    List<ProdutoVariacaoModel> variacoes = const [],
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final updatedProduto = await adminService.updateProduto(
+        id: id,
+        descricao: descricao,
+        valorUnitario: valorUnitario,
+        quantidade: quantidade,
+        categoria: categoria,
+        imagemBytes: imagemBytes,
+        imagemNome: imagemNome,
+        variacoes: variacoes,
+      );
+      
+      final index = _produtos.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        _produtos[index] = updatedProduto;
+      }
+    } catch (e) {
+      Log.e('[AdminProvider] Erro ao atualizar produto', e);
+      _errorMessage = e.toString();
+      rethrow; // Repassa o erro para o modal poder tratar
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }

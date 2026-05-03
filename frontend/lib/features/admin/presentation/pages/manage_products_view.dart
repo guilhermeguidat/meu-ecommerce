@@ -199,7 +199,7 @@ class ManageProductsView extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.edit_outlined, size: 20),
-                onPressed: () {},
+                onPressed: () => AddProductModal.show(context, produto: produto),
                 color: theme.primaryColor,
                 tooltip: 'Editar',
               ),

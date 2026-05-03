@@ -166,6 +166,54 @@ class AdminService {
     }
   }
 
+  Future<ProdutoModel> updateProduto({
+    required int id,
+    required String descricao,
+    required double valorUnitario,
+    required int quantidade,
+    String? categoria,
+    Uint8List? imagemBytes,
+    String? imagemNome,
+    List<ProdutoVariacaoModel> variacoes = const [],
+  }) async {
+    try {
+      final fields = <String, dynamic>{
+        'id': id,
+        'descricao': descricao,
+        'valorUnitario': valorUnitario,
+        'quantidade': quantidade,
+      };
+
+      if (categoria != null && categoria.isNotEmpty) {
+        fields['categoria'] = categoria;
+      }
+
+      // Add variations as indexed form fields
+      for (var i = 0; i < variacoes.length; i++) {
+        final v = variacoes[i];
+        fields['variacoes[$i].tamanho'] = v.tamanho;
+        fields['variacoes[$i].cor'] = v.cor;
+        fields['variacoes[$i].quantidade'] = v.quantidade;
+      }
+
+      final formData = FormData.fromMap(fields);
+
+      if (imagemBytes != null && imagemNome != null) {
+        formData.files.add(
+          MapEntry('imagem', MultipartFile.fromBytes(imagemBytes, filename: imagemNome)),
+        );
+      }
+
+      final response = await dio.put('/produto', data: formData);
+      return ProdutoModel.fromJson(response.data);
+    } on DioException catch (e) {
+      Log.e('[AdminService] updateProduto erro ${e.response?.statusCode}', e.response?.data);
+      throw Exception('Erro ao atualizar produto: ${e.response?.data ?? e.message}');
+    } on Exception catch (e) {
+      throw Exception('Erro ao atualizar produto: $e');
+    }
+  }
+
   Future<void> deleteProduto(int id) async {
     try {
       await dio.delete('/produto/$id');

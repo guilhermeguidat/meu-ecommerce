@@ -4,17 +4,20 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/produto_variacao_model.dart';
+import '../../data/models/produto_model.dart';
 import '../providers/admin_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class AddProductModal extends StatefulWidget {
-  const AddProductModal({super.key});
+  final ProdutoModel? produto;
 
-  static Future<void> show(BuildContext context) {
+  const AddProductModal({super.key, this.produto});
+
+  static Future<void> show(BuildContext context, {ProdutoModel? produto}) {
     return showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.4),
-      builder: (ctx) => const AddProductModal(),
+      builder: (ctx) => AddProductModal(produto: produto),
     );
   }
 
@@ -31,6 +34,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
 
   Uint8List? _imagemBytes;
   String? _imagemNome;
+  String? _urlImagemExistente;
 
   final List<ProdutoVariacaoModel> _variacoes = [];
   bool _isLoading = false;
@@ -43,6 +47,19 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
     _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
+
+    if (widget.produto != null) {
+      final p = widget.produto!;
+      _descricaoController.text = p.descricao;
+      _precoController.text = p.valorUnitario.toStringAsFixed(2).replaceAll('.', ',');
+      _quantidadeController.text = p.quantidade.toString();
+      _categoriaController.text = p.categoria ?? '';
+      _urlImagemExistente = p.urlImagem;
+      
+      if (p.variacoes.isNotEmpty) {
+        _variacoes.addAll(p.variacoes);
+      }
+    }
   }
 
   @override
@@ -173,21 +190,30 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
             ),
             ElevatedButton(
               onPressed: () {
-                if (tamanhoCtrl.text.isNotEmpty && corCtrl.text.isNotEmpty) {
-                  final variacaoQtd = int.tryParse(qtdCtrl.text) ?? 0;
-                  setState(() {
-                    _variacoes.add(ProdutoVariacaoModel(
-                      tamanho: tamanhoCtrl.text.trim(),
-                      cor: corCtrl.text.trim(),
-                      quantidade: variacaoQtd,
-                    ));
-
-                    // Atualiza quantidade total automaticamente se houver variações
-                    final totalQtd = _variacoes.fold<int>(0, (sum, v) => sum + v.quantidade);
-                    _quantidadeController.text = totalQtd.toString();
-                  });
-                  Navigator.pop(dCtx);
+                if (tamanhoCtrl.text.trim().isEmpty || corCtrl.text.trim().isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Por favor, preencha o tamanho e a cor.'),
+                      backgroundColor: Colors.red[600],
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  return;
                 }
+                
+                final variacaoQtd = int.tryParse(qtdCtrl.text) ?? 0;
+                setState(() {
+                  _variacoes.add(ProdutoVariacaoModel(
+                    tamanho: tamanhoCtrl.text.trim(),
+                    cor: corCtrl.text.trim(),
+                    quantidade: variacaoQtd,
+                  ));
+
+                  // Atualiza quantidade total automaticamente se houver variações
+                  final totalQtd = _variacoes.fold<int>(0, (sum, v) => sum + v.quantidade);
+                  _quantidadeController.text = totalQtd.toString();
+                });
+                Navigator.pop(dCtx);
               },
               child: const Text('Adicionar'),
             ),
@@ -227,32 +253,46 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
       // Cria MultipartFile fresh a cada tentativa para evitar 'already finalized'
       final imagemBytes = _imagemBytes;
       final imagemNome = _imagemNome;
-      await context.read<AdminProvider>().adminService.createProduto(
-        descricao: _descricaoController.text.trim(),
-        valorUnitario: double.parse(_precoController.text.replaceAll(',', '.')),
-        quantidade: int.parse(_quantidadeController.text),
-        categoria: _categoriaController.text.trim().isEmpty ? null : _categoriaController.text.trim(),
-        imagemBytes: imagemBytes,
-        imagemNome: imagemNome,
-        variacoes: _variacoes,
-      );
+      
+      if (widget.produto != null) {
+        await context.read<AdminProvider>().updateProduto(
+          id: widget.produto!.id!,
+          descricao: _descricaoController.text.trim(),
+          valorUnitario: double.parse(_precoController.text.replaceAll(',', '.')),
+          quantidade: int.parse(_quantidadeController.text),
+          categoria: _categoriaController.text.trim().isEmpty ? null : _categoriaController.text.trim(),
+          imagemBytes: imagemBytes,
+          imagemNome: imagemNome,
+          variacoes: _variacoes,
+        );
+      } else {
+        await context.read<AdminProvider>().adminService.createProduto(
+          descricao: _descricaoController.text.trim(),
+          valorUnitario: double.parse(_precoController.text.replaceAll(',', '.')),
+          quantidade: int.parse(_quantidadeController.text),
+          categoria: _categoriaController.text.trim().isEmpty ? null : _categoriaController.text.trim(),
+          imagemBytes: imagemBytes,
+          imagemNome: imagemNome,
+          variacoes: _variacoes,
+        );
+      }
       if (mounted) {
         Navigator.pop(context);
         context.read<AdminProvider>().loadData();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Produto cadastrado com sucesso!'),
+            content: Text(widget.produto != null ? 'Produto atualizado com sucesso!' : 'Produto cadastrado com sucesso!'),
             backgroundColor: Colors.green[600],
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         );
       }
-    } on Exception catch (e) {
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erro ao cadastrar produto: $e'),
+            content: Text('Erro inesperado: $e'),
             backgroundColor: Colors.red[600],
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -401,7 +441,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Novo Produto',
+                widget.produto != null ? 'Editar Produto' : 'Novo Produto',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -409,7 +449,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                 ),
               ),
               Text(
-                'Preencha os dados para adicionar ao catálogo',
+                widget.produto != null ? 'Atualize as informações do produto' : 'Preencha os dados para adicionar ao catálogo',
                 style: TextStyle(fontSize: 12, color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
               ),
             ],
@@ -468,8 +508,29 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                   ),
                 ],
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            : (_urlImagemExistente != null && _urlImagemExistente!.isNotEmpty)
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(_urlImagemExistente!, fit: BoxFit.cover),
+                      Container(color: Colors.black38),
+                      const Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.edit_rounded, color: Colors.white, size: 28),
+                            SizedBox(height: 6),
+                            Text(
+                              'Alterar imagem atual',
+                              style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
@@ -683,12 +744,12 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
-                  : const Row(
+                  : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 18),
-                        SizedBox(width: 8),
-                        Text('Cadastrar Produto', style: TextStyle(fontWeight: FontWeight.w600)),
+                        const Icon(Icons.check_circle_outline_rounded, size: 18),
+                        const SizedBox(width: 8),
+                        Text(widget.produto != null ? 'Salvar Alterações' : 'Cadastrar Produto', style: const TextStyle(fontWeight: FontWeight.w600)),
                       ],
                     ),
             ),
