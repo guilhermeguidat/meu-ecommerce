@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * DTO de request do produto. Usa classe POJO com Lombok (não record) para permitir
@@ -21,6 +22,6 @@ public class ProdutoRequest {
     private String descricao;
     private BigDecimal valorUnitario;
     private Integer quantidade;
-    private List<ProdutoVariacaoDto> variacoes;
+    private List<ProdutoVariacaoDto> variacoes = new ArrayList<>();
     private String categoria;
 }
