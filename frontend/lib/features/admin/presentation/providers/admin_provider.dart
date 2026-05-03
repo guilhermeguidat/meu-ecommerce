@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/core/theme/theme_provider.dart';
+import '../../../../core/utils/log.dart';
 import '../../data/models/loja_model.dart';
 import '../../data/models/produto_model.dart';
 import '../../data/services/admin_service.dart';
@@ -57,14 +58,14 @@ class AdminProvider extends ChangeNotifier {
         _loja = await adminService.getLojaConfig();
         _updateGlobalTheme();
       } catch (e) {
-        print('[AdminProvider] Erro ao carregar config da loja: $e');
+        Log.w('[AdminProvider] Erro ao carregar config da loja: $e');
       }
 
       // Carrega produtos (geralmente requer token)
       try {
         _produtos = await adminService.getProdutos();
       } catch (e) {
-        print('[AdminProvider] Erro ao carregar produtos (pode ser falta de login): $e');
+        Log.w('[AdminProvider] Erro ao carregar produtos (pode ser falta de login): $e');
       }
     } finally {
       _isLoading = false;
@@ -95,7 +96,7 @@ class AdminProvider extends ChangeNotifier {
       );
       _updateGlobalTheme();
     } on Exception catch (e) {
-      print('[AdminProvider] Erro ao atualizar loja: $e');
+      Log.e('[AdminProvider] Erro ao atualizar loja', e);
       _errorMessage = e.toString();
     } finally {
       _isLoading = false;

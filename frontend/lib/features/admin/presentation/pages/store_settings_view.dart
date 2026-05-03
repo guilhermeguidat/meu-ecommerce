@@ -179,18 +179,46 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Configurações da Loja',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Gerencie a aparência e os banners da sua vitrine.',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Configurações da Loja',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Gerencie a aparência e os banners da sua vitrine.',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+              ElevatedButton.icon(
+                onPressed: provider.isLoading ? null : _saveSettings,
+                icon: provider.isLoading
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                      )
+                    : const Icon(Icons.save_rounded, size: 18),
+                label: const Text('Salvar Configurações', style: TextStyle(fontWeight: FontWeight.w600)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 32),
           Container(
@@ -210,14 +238,6 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Identidade Visual',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Divider(height: 32),
-
                 if (provider.errorMessage != null)
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -294,11 +314,6 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
 
                 // ---- Banners ----
                 const Text('Banners Promocionais', style: TextStyle(fontWeight: FontWeight.w500)),
-                const SizedBox(height: 4),
-                Text(
-                  'Selecione uma ou mais imagens para os banners da vitrine.',
-                  style: TextStyle(fontSize: 12, color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
-                ),
                 const SizedBox(height: 12),
 
                 // Banners já salvos no servidor
@@ -330,27 +345,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
                   ),
                 ),
 
-                const SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: provider.isLoading ? null : _saveSettings,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.primaryColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      elevation: 0,
-                    ),
-                    child: provider.isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          )
-                        : const Text('Salvar Configurações', style: TextStyle(fontWeight: FontWeight.w600)),
-                  ),
-                ),
+                const SizedBox(height: 12),
               ],
             ),
           ),

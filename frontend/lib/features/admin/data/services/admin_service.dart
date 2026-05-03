@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
+import '../../../../core/utils/log.dart';
 import '../models/loja_model.dart';
 import '../models/produto_model.dart';
 import '../models/produto_variacao_model.dart';
@@ -14,6 +15,9 @@ class AdminService {
     try {
       final response = await dio.get('/loja');
       return LojaModel.fromJson(response.data);
+    } on DioException catch (e) {
+      Log.e('[AdminService] getLojaConfig erro ${e.response?.statusCode}', e.response?.data);
+      throw Exception('Erro ao buscar configurações da loja: ${e.response?.data ?? e.message}');
     } on Exception catch (e) {
       throw Exception('Erro ao buscar configurações da loja: $e');
     }
@@ -61,7 +65,7 @@ class AdminService {
       final response = await dio.put('/loja', data: formData);
       return LojaModel.fromJson(response.data);
     } on DioException catch (e) {
-      print('[AdminService] updateLojaConfig erro ${e.response?.statusCode}: ${e.response?.data}');
+      Log.e('[AdminService] updateLojaConfig erro ${e.response?.statusCode}', e.response?.data);
       throw Exception('Erro ao atualizar configurações da loja: ${e.response?.data ?? e.message}');
     } on Exception catch (e) {
       throw Exception('Erro ao atualizar configurações da loja: $e');
@@ -87,6 +91,9 @@ class AdminService {
       final response = await dio.get('/produto/buscaTodos');
       final List<dynamic> data = response.data;
       return data.map((json) => ProdutoModel.fromJson(json)).toList();
+    } on DioException catch (e) {
+      Log.e('[AdminService] getProdutos erro ${e.response?.statusCode}', e.response?.data);
+      throw Exception('Erro ao buscar produtos: ${e.response?.data ?? e.message}');
     } on Exception catch (e) {
       throw Exception('Erro ao buscar produtos: $e');
     }
@@ -131,6 +138,9 @@ class AdminService {
 
       final response = await dio.post('/produto', data: formData);
       return ProdutoModel.fromJson(response.data);
+    } on DioException catch (e) {
+      Log.e('[AdminService] createProduto erro ${e.response?.statusCode}', e.response?.data);
+      throw Exception('Erro ao criar produto: ${e.response?.data ?? e.message}');
     } on Exception catch (e) {
       throw Exception('Erro ao criar produto: $e');
     }
@@ -139,6 +149,9 @@ class AdminService {
   Future<void> deleteProduto(int id) async {
     try {
       await dio.delete('/produto/$id');
+    } on DioException catch (e) {
+      Log.e('[AdminService] deleteProduto erro ${e.response?.statusCode}', e.response?.data);
+      throw Exception('Erro ao excluir produto: ${e.response?.data ?? e.message}');
     } on Exception catch (e) {
       throw Exception('Erro ao excluir produto: $e');
     }

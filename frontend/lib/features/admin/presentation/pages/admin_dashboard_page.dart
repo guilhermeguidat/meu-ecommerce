@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/theme_provider.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/admin_sidebar.dart';
 import 'store_settings_view.dart';
@@ -29,6 +28,25 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  String _getTitle() {
+    switch (_currentIndex) {
+      case 0:
+        return 'Visão Geral';
+      case 1:
+        return 'Produtos';
+      case 2:
+        return 'Pedidos';
+      case 3:
+        return 'Clientes';
+      case 4:
+        return 'Análise';
+      case 5:
+        return 'Configurações';
+      default:
+        return 'Painel Administrativo';
+    }
   }
 
   Widget _buildBody(AdminProvider provider) {
@@ -117,9 +135,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            'Visão Geral',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          Text(
+            _getTitle(),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(), // Removidos botões de ação conforme solicitado
         ],

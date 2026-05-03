@@ -174,12 +174,17 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
             ElevatedButton(
               onPressed: () {
                 if (tamanhoCtrl.text.isNotEmpty && corCtrl.text.isNotEmpty) {
+                  final variacaoQtd = int.tryParse(qtdCtrl.text) ?? 0;
                   setState(() {
                     _variacoes.add(ProdutoVariacaoModel(
                       tamanho: tamanhoCtrl.text.trim(),
                       cor: corCtrl.text.trim(),
-                      quantidade: int.tryParse(qtdCtrl.text) ?? 0,
+                      quantidade: variacaoQtd,
                     ));
+
+                    // Atualiza quantidade total automaticamente se houver variações
+                    final totalQtd = _variacoes.fold<int>(0, (sum, v) => sum + v.quantidade);
+                    _quantidadeController.text = totalQtd.toString();
                   });
                   Navigator.pop(dCtx);
                 }
@@ -614,6 +619,9 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
             onPressed: () {
               setState(() {
                 _variacoes.removeAt(index);
+                // Atualiza quantidade total ao remover variação
+                final totalQtd = _variacoes.fold<int>(0, (sum, v) => sum + v.quantidade);
+                _quantidadeController.text = totalQtd.toString();
               });
             },
           ),
