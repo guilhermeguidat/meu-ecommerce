@@ -4,28 +4,44 @@ class StatCard extends StatelessWidget {
   final String title;
   final String value;
   final IconData icon;
-  final Color iconBgColor;
-  final Color iconColor;
   final String trendValue;
   final bool isTrendUp;
+  final Color? baseColor;
 
   const StatCard({
     super.key,
     required this.title,
     required this.value,
     required this.icon,
-    required this.iconBgColor,
-    required this.iconColor,
     required this.trendValue,
     required this.isTrendUp,
+    this.baseColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final trendColor = isTrendUp ? Colors.green[600] : Colors.red[600];
-    final trendBgColor = isTrendUp ? Colors.green[50] : Colors.red[50];
-    final trendIcon = isTrendUp ? Icons.arrow_upward : Icons.arrow_downward;
+    final isDark = theme.brightness == Brightness.dark;
+    final isNeutral = trendValue == '0' || trendValue == '0%';
+    
+    // Cores adaptativas para a tendência
+    final Color trendColor;
+    final Color trendBgColor;
+    
+    if (isNeutral) {
+      trendColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+      trendBgColor = isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[100]!;
+    } else if (isTrendUp) {
+      trendColor = isDark ? Colors.greenAccent[400]! : Colors.green[700]!;
+      trendBgColor = isDark ? Colors.greenAccent.withValues(alpha: 0.1) : Colors.green[50]!;
+    } else {
+      trendColor = isDark ? Colors.redAccent[200]! : Colors.red[700]!;
+      trendBgColor = isDark ? Colors.redAccent.withValues(alpha: 0.1) : Colors.red[50]!;
+    }
+
+    final trendIcon = isNeutral ? null : (isTrendUp ? Icons.arrow_upward : Icons.arrow_downward);
+
+    final iconColor = baseColor ?? theme.primaryColor;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -48,12 +64,23 @@ class StatCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: iconBgColor,
-                  borderRadius: BorderRadius.circular(8),
+                  gradient: LinearGradient(
+                    colors: [iconColor, iconColor.withValues(alpha: 0.7)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: iconColor.withValues(alpha: 0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                child: Icon(icon, color: iconColor, size: 24),
+                child: Icon(icon, color: Colors.white, size: 20),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -71,8 +98,10 @@ class StatCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 2),
-                    Icon(trendIcon, color: trendColor, size: 12),
+                    if (trendIcon != null) ...[
+                      const SizedBox(width: 2),
+                      Icon(trendIcon, color: trendColor, size: 12),
+                    ],
                   ],
                 ),
               ),

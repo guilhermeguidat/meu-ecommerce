@@ -231,7 +231,34 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
       logoName: _logoName,
       imagemLoginBytes: _imagemLoginBytes,
       imagemLoginName: _imagemLoginName,
-    );
+      existingBanners: _bannersExistentes.isNotEmpty ? List.from(_bannersExistentes) : [],
+    ).then((_) {
+      if (mounted && context.read<AdminProvider>().errorMessage == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Configurações salvas com sucesso!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        // Limpa seleções locais pois já foram salvas
+        setState(() {
+          _bannerBytes.clear();
+          _bannerNames.clear();
+          _logoBytes = null;
+          _logoName = null;
+          _imagemLoginBytes = null;
+          _imagemLoginName = null;
+          
+          // Atualiza banners existentes com o que veio do provider após o save
+          final updatedLoja = context.read<AdminProvider>().loja;
+          if (updatedLoja != null) {
+            _bannersExistentes = List.from(updatedLoja.banners);
+            _urlLogoExistente = updatedLoja.urlLogo;
+            _urlImagemLoginExistente = updatedLoja.urlImagemLogin;
+          }
+        });
+      }
+    });
   }
 
   @override

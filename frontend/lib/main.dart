@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: 'Meu E-Commerce - Onboarding',
+            title: 'Meu E-commerce',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme(themeProvider.primaryColor),
             darkTheme: AppTheme.darkTheme(themeProvider.primaryColor),

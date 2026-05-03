@@ -59,57 +59,71 @@ public class LojaService {
             }
         }
 
-        List<String> bannerUrls = new ArrayList<>();
-        var bannerFiles = lojaRequest.bannerFiles();
-
-        if (bannerFiles != null && !bannerFiles.isEmpty()) {
-            // Remove banners antigos antes de fazer upload dos novos
-            Loja lojaAtual = lojaRepository.findById(ID_DEFAULT).orElse(null);
-            if (lojaAtual != null) {
-                var oldIndexes = parseBannerIndexes(lojaAtual.getBannersRaw());
-                for (int idx : oldIndexes) {
+        List<Integer> indexesToKeep = new ArrayList<>();
+        Loja lojaAtual = lojaRepository.findById(ID_DEFAULT).orElse(null);
+        
+        if (lojaAtual != null && lojaRequest.existingBanners() != null) {
+            List<Integer> currentIndexes = parseBannerIndexes(lojaAtual.getBannersRaw());
+            for (int idx : currentIndexes) {
+                String urlForIdx = bucketService.getUrlBanner(ID_DEFAULT, idx).split("\\?")[0];
+                boolean shouldKeep = false;
+                for (String existingUrl : lojaRequest.existingBanners()) {
+                    if (existingUrl.contains(urlForIdx)) {
+                        shouldKeep = true;
+                        break;
+                    }
+                }
+                
+                if (shouldKeep) {
+                    indexesToKeep.add(idx);
+                } else {
                     bucketService.deleteBanner(ID_DEFAULT, idx);
                 }
             }
+        } else if (lojaAtual != null && (lojaRequest.bannerFiles() == null || lojaRequest.bannerFiles().isEmpty())) {
+             indexesToKeep.addAll(parseBannerIndexes(lojaAtual.getBannersRaw()));
+        } else if (lojaAtual != null) {
+            var oldIndexes = parseBannerIndexes(lojaAtual.getBannersRaw());
+            for (int idx : oldIndexes) {
+                bucketService.deleteBanner(ID_DEFAULT, idx);
+            }
+        }
 
-            for (int i = 0; i < bannerFiles.size(); i++) {
-                var bannerFile = bannerFiles.get(i);
-                if (bannerFile == null || bannerFile.isEmpty()) {
-                    continue;
-                }
-                if (!verificaSeArquivoEImagem(bannerFile)) {
-                    throw new LogoInvalidaException("bannerFiles[" + i + "]", "Banner deve ser uma imagem");
-                }
+        List<Integer> finalIndexes = new ArrayList<>(indexesToKeep);
+        int nextIndex = finalIndexes.isEmpty() ? 0 : finalIndexes.stream().max(Integer::compare).orElse(-1) + 1;
+
+        var bannerFiles = lojaRequest.bannerFiles();
+        if (bannerFiles != null && !bannerFiles.isEmpty()) {
+            for (MultipartFile bannerFile : bannerFiles) {
+                if (bannerFile == null || bannerFile.isEmpty()) continue;
+                if (!verificaSeArquivoEImagem(bannerFile)) throw new LogoInvalidaException("banner", "Arquivo deve ser imagem");
+                
                 try {
                     bucketService.upload(new BucketFile(
-                            bucketService.retornaNomeBanner(ID_DEFAULT, i),
+                            bucketService.retornaNomeBanner(ID_DEFAULT, nextIndex),
                             bannerFile.getInputStream(),
                             bannerFile.getContentType(),
                             bannerFile.getSize()
                     ));
-                    bannerUrls.add(bucketService.getUrlBanner(ID_DEFAULT, i));
+                    finalIndexes.add(nextIndex);
+                    nextIndex++;
                 } catch (Exception e) {
-                    throw new LogoInvalidaException("bannerFiles[" + i + "]", "Erro ao fazer upload do banner " + i);
+                    throw new LogoInvalidaException("banner", "Erro ao fazer upload do banner");
                 }
             }
         }
 
-        // Salva contagem de banners como índices CSV (0,1,2,...) para recuperar as URLs depois
-        Loja lojaParaContagem = lojaRepository.findById(ID_DEFAULT).orElse(null);
-        int bannerCount = (bannerFiles != null) ? (int) bannerFiles.stream().filter(f -> f != null && !f.isEmpty()).count() : -1;
-        String bannersRaw = bannerCount >= 0
-                ? buildBannerIndexesRaw(bannerCount)
-                : (lojaParaContagem != null ? lojaParaContagem.getBannersRaw() : "");
+        String bannersRaw = finalIndexes.stream()
+                .map(String::valueOf)
+                .reduce((a, b) -> a + "," + b)
+                .orElse("");
 
         Loja loja = new Loja(ID_DEFAULT, lojaRequest.corPrimaria(), lojaRequest.nome(), bannersRaw);
         lojaRepository.save(loja);
 
-        String logoUrl = logoEnviada ? bucketService.getUrl(ID_DEFAULT) : null;
-        String imagemLoginUrl = imagemLoginEnviada ? bucketService.getUrlImagemLogin(ID_DEFAULT) : null;
+        String logoUrl = bucketService.getUrl(ID_DEFAULT);
+        String imagemLoginUrl = bucketService.getUrlImagemLogin(ID_DEFAULT);
 
-        if (bannerFiles != null && !bannerFiles.isEmpty()) {
-            return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), logoUrl, imagemLoginUrl, bannerUrls);
-        }
         return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), logoUrl, imagemLoginUrl, recuperaUrlsBanners(bannersRaw));
     }
 

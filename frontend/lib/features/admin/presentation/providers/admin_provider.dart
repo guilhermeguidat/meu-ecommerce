@@ -82,6 +82,7 @@ class AdminProvider extends ChangeNotifier {
     String? logoName,
     Uint8List? imagemLoginBytes,
     String? imagemLoginName,
+    List<String>? existingBanners,
   }) async {
     _isLoading = true;
     _errorMessage = null;
@@ -97,6 +98,7 @@ class AdminProvider extends ChangeNotifier {
         logoName: logoName,
         imagemLoginBytes: imagemLoginBytes,
         imagemLoginName: imagemLoginName,
+        existingBanners: existingBanners,
       );
       _updateGlobalTheme();
     } on Exception catch (e) {

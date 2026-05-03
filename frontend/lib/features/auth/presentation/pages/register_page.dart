@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/admin/presentation/providers/admin_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/register_provider.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -49,6 +50,8 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final adminProvider = context.watch<AdminProvider>();
+    final registerImageUrl = adminProvider.loja?.urlImagemLogin;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -82,7 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     if (isDesktop)
                       Expanded(
-                        child: _buildLeftBrandArea(theme, isDark),
+                        child: _buildLeftBrandArea(theme, isDark, registerImageUrl),
                       ),
                     Expanded(
                       child: _buildRightRegisterForm(context, isDark),
@@ -97,17 +100,19 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildLeftBrandArea(ThemeData theme, bool isDark) {
+  Widget _buildLeftBrandArea(ThemeData theme, bool isDark, String? registerImageUrl) {
     return Stack(
       fit: StackFit.expand,
       children: [
         // Background Image
-        Image.network(
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuBme2-MJnj1ATv3oKp5ObM3Pa5Y6oId9XxXvZTWMM5AvL1gY0ooiBU8T3-r81tkto3upaFz2fRIPHT_IG0y5fU6t4NPvWPTbYyfltbS-xOWB3Ps22zFTVgeh4g4qvqkZJY9R14W5eBaI65lKw9Xdb7Ssb1wYIfFLMMYz4PPY3xrLCHNaql3T7Z7sUIgi0aNCDEPITjapqgKHPbUWUH9gyvbGYa-PVGvz80qX8UxaClVQ9U2jo9XcU84bZEOSJVnRAKo3Lw3OxXsCUvN',
-          fit: BoxFit.cover,
-          color: isDark ? Colors.black.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.1),
-          colorBlendMode: isDark ? BlendMode.darken : BlendMode.lighten,
-        ),
+        if (registerImageUrl != null && registerImageUrl.isNotEmpty)
+          Image.network(
+            registerImageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => _buildImageFallback(isDark),
+          )
+        else
+          _buildImageFallback(isDark),
         // Overlays
         Container(
           decoration: BoxDecoration(
@@ -115,96 +120,21 @@ class _RegisterPageState extends State<RegisterPage> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                theme.primaryColor.withValues(alpha: 0.9),
+                theme.primaryColor.withValues(alpha: 0.4),
                 Colors.transparent,
               ],
             ),
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withValues(alpha: 0.4),
-                Colors.transparent,
-              ],
-            ),
-          ),
-        ),
-        // Content
-        Padding(
-          padding: const EdgeInsets.all(48.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
-                ),
-                child: const Icon(Icons.rocket_launch, color: Colors.white),
-              ),
-              const Spacer(),
-              const Text(
-                'Junte-se a nós e escale seu negócio.',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Crie uma conta para acessar as ferramentas de e-commerce da próxima geração. Feito para velocidade, escala e impacto.',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white70,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 48),
-              // Glassmorphism info card
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-                ),
-                child: const Row(
-                   children: [
-                      Icon(Icons.check_circle, color: Colors.greenAccent, size: 28),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Fast and secure onboarding',
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Start your journey in seconds without friction.',
-                              style: TextStyle(color: Colors.white70, fontSize: 13),
-                            ),
-                          ],
-                        ),
-                      )
-                   ],
-                )
-              )
-            ],
-          ),
-        ),
+        // Somente a imagem e os gradientes, como no login
       ],
+    );
+  }
+
+  Widget _buildImageFallback(bool isDark) {
+    return Image.network(
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop',
+      fit: BoxFit.cover,
     );
   }
 

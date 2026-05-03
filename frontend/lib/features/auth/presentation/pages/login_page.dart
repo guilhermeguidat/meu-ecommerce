@@ -110,15 +110,39 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLeftBrandArea(ThemeData theme, bool isDark, AdminProvider adminProvider) {
     final imageUrl = adminProvider.loja?.urlImagemLogin;
 
-    return Container(
-      color: theme.primaryColor.withValues(alpha: 0.1),
-      child: imageUrl != null && imageUrl.isNotEmpty
-          ? Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => _buildFallbackBrandArea(theme),
-            )
-          : _buildFallbackBrandArea(theme),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        if (imageUrl != null && imageUrl.isNotEmpty)
+          Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => _buildImageFallback(isDark),
+          )
+        else
+          _buildImageFallback(isDark),
+        
+        // Gradient Overlays
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                theme.primaryColor.withValues(alpha: 0.4),
+                Colors.transparent,
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageFallback(bool isDark) {
+    return Image.network(
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop',
+      fit: BoxFit.cover,
     );
   }
 

@@ -32,6 +32,7 @@ class AdminService {
     String? logoName,
     Uint8List? imagemLoginBytes,
     String? imagemLoginName,
+    List<String>? existingBanners,
   }) async {
     try {
       final formData = FormData.fromMap({
@@ -72,6 +73,12 @@ class AdminService {
               contentType: _mimeTypeFromName(name),
             ),
           ));
+        }
+      }
+
+      if (existingBanners != null) {
+        for (var bannerUrl in existingBanners) {
+          formData.fields.add(MapEntry('existingBanners', bannerUrl));
         }
       }
 
