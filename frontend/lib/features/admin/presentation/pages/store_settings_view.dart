@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/widgets/custom_toast.dart';
+import '../../../../core/utils/log.dart';
 import '../providers/admin_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -136,10 +138,9 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
         });
       }
     } on Exception catch (e) {
+      Log.e('[StoreSettingsView] Erro ao selecionar banners', e);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao selecionar banners: $e')),
-        );
+        CustomToast.show(context, message: 'Erro ao selecionar banners: $e', isError: true);
       }
     }
   }
@@ -169,8 +170,9 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
         _logoName = picked.name;
       });
     } on Exception catch (e) {
+      Log.e('[StoreSettingsView] Erro ao selecionar logo', e);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao selecionar imagem: $e')));
+        CustomToast.show(context, message: 'Erro ao selecionar imagem: $e', isError: true);
       }
     }
   }
@@ -194,8 +196,9 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
         _imagemLoginName = picked.name;
       });
     } on Exception catch (e) {
+      Log.e('[StoreSettingsView] Erro ao selecionar imagem login', e);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao selecionar imagem: $e')));
+        CustomToast.show(context, message: 'Erro ao selecionar imagem: $e', isError: true);
       }
     }
   }
@@ -211,15 +214,11 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
     final cor = _corPrimariaController.text.trim();
     final nome = _nomeController.text.trim();
     if (cor.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Informe a cor primária')),
-      );
+      CustomToast.show(context, message: 'Informe a cor primária', isError: true);
       return;
     }
     if (nome.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Informe o nome da loja')),
-      );
+      CustomToast.show(context, message: 'Informe o nome da loja', isError: true);
       return;
     }
     context.read<AdminProvider>().updateStoreConfig(
@@ -234,12 +233,8 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
       existingBanners: _bannersExistentes.isNotEmpty ? List.from(_bannersExistentes) : [],
     ).then((_) {
       if (mounted && context.read<AdminProvider>().errorMessage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Configurações salvas com sucesso!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        CustomToast.show(context, message: 'Configurações salvas com sucesso!');
+        
         // Limpa seleções locais pois já foram salvas
         setState(() {
           _bannerBytes.clear();

@@ -3,6 +3,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/widgets/custom_toast.dart';
+import '../../../../core/utils/log.dart';
 import '../../data/models/produto_variacao_model.dart';
 import '../../data/models/produto_model.dart';
 import '../providers/admin_provider.dart';
@@ -85,8 +87,9 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
         _imagemNome = picked.name;
       });
     } on Exception catch (e) {
+      Log.e('[AddProductModal] Erro ao selecionar imagem', e);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao selecionar imagem: $e')));
+        CustomToast.show(context, message: 'Erro ao selecionar imagem: $e', isError: true);
       }
     }
   }
@@ -96,6 +99,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
   }
 
   void _showVariacaoDialog(BuildContext ctx) {
+    final variacaoFormKey = GlobalKey<FormState>();
     final tamanhoCtrl = TextEditingController();
     final corCtrl = TextEditingController();
     final qtdCtrl = TextEditingController();
@@ -118,16 +122,20 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
         builder: (context, setDialogState) => AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text('Nova Variação', style: TextStyle(fontWeight: FontWeight.bold)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: tamanhoCtrl,
-                decoration: const InputDecoration(labelText: 'Tamanho', hintText: 'Ex: P, M, G, 38...'),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
+          content: Form(
+            key: variacaoFormKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: tamanhoCtrl,
+                  decoration: const InputDecoration(labelText: 'Tamanho', hintText: 'Ex: P, M, G, 38...'),
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                   GestureDetector(
                     onTap: () {
                       showDialog(
@@ -157,6 +165,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                     child: Container(
                       width: 44,
                       height: 44,
+                      margin: const EdgeInsets.only(top: 8),
                       decoration: BoxDecoration(
                         color: pickerColor,
                         borderRadius: BorderRadius.circular(8),
@@ -167,21 +176,23 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
                       controller: corCtrl,
                       decoration: const InputDecoration(labelText: 'Cor', hintText: 'Ex: Azul, #2563EB...'),
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Obrigatório' : null,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              TextField(
+              TextFormField(
                 controller: qtdCtrl,
                 decoration: const InputDecoration(labelText: 'Quantidade'),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
             ],
+          ),
           ),
           actions: [
             TextButton(
@@ -190,14 +201,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
             ),
             ElevatedButton(
               onPressed: () {
-                if (tamanhoCtrl.text.trim().isEmpty || corCtrl.text.trim().isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Por favor, preencha o tamanho e a cor.'),
-                      backgroundColor: Colors.red[600],
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
+                if (!variacaoFormKey.currentState!.validate()) {
                   return;
                 }
                 
@@ -279,25 +283,12 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
       if (mounted) {
         Navigator.pop(context);
         context.read<AdminProvider>().loadData();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(widget.produto != null ? 'Produto atualizado com sucesso!' : 'Produto cadastrado com sucesso!'),
-            backgroundColor: Colors.green[600],
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+        CustomToast.show(context, message: widget.produto != null ? 'Produto atualizado com sucesso!' : 'Produto cadastrado com sucesso!');
       }
     } catch (e) {
+      Log.e('[AddProductModal] Erro ao salvar produto', e);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erro inesperado: $e'),
-            backgroundColor: Colors.red[600],
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+        CustomToast.show(context, message: 'Erro inesperado: $e', isError: true);
       }
     } finally {
       if (mounted) {
