@@ -15,6 +15,7 @@ class StoreSettingsView extends StatefulWidget {
 
 class _StoreSettingsViewState extends State<StoreSettingsView> {
   final _corPrimariaController = TextEditingController();
+  final _nomeController = TextEditingController();
   Color _pickerColor = AppColors.primary;
 
   // Banners selecionados via image_picker (novos uploads)
@@ -30,6 +31,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
     final provider = context.read<AdminProvider>();
     if (provider.loja != null) {
       _corPrimariaController.text = provider.loja!.corPrimaria;
+      _nomeController.text = provider.loja!.nome;
       _bannersExistentes = List.from(provider.loja!.banners);
       try {
         _pickerColor = _parseColor(provider.loja!.corPrimaria);
@@ -103,6 +105,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
   void dispose() {
     _corPrimariaController.removeListener(_onHexChanged);
     _corPrimariaController.dispose();
+    _nomeController.dispose();
     super.dispose();
   }
 
@@ -144,14 +147,22 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
 
   void _saveSettings() {
     final cor = _corPrimariaController.text.trim();
+    final nome = _nomeController.text.trim();
     if (cor.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Informe a cor primária')),
       );
       return;
     }
+    if (nome.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Informe o nome da loja')),
+      );
+      return;
+    }
     context.read<AdminProvider>().updateStoreConfig(
       corPrimaria: cor,
+      nome: nome,
       bannerBytes: _bannerBytes.isNotEmpty ? List.from(_bannerBytes) : null,
       bannerNames: _bannerNames.isNotEmpty ? List.from(_bannerNames) : null,
     );
@@ -229,6 +240,18 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
                       ],
                     ),
                   ),
+
+                // ---- Nome da Loja ----
+                const Text('Nome da Loja', style: TextStyle(fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _nomeController,
+                  decoration: const InputDecoration(
+                    hintText: 'Ex: Minha Loja Inc.',
+                    prefixIcon: Icon(Icons.store_rounded, size: 18),
+                  ),
+                ),
+                const SizedBox(height: 24),
 
                 // ---- Cor Primária ----
                 const Text('Cor Primária', style: TextStyle(fontWeight: FontWeight.w500)),

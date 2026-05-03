@@ -21,6 +21,7 @@ class AdminService {
 
   Future<LojaModel> updateLojaConfig({
     required String corPrimaria,
+    required String nome,
     List<Uint8List>? bannerBytes,
     List<String>? bannerNames,
     Uint8List? logoBytes,
@@ -29,6 +30,7 @@ class AdminService {
     try {
       final formData = FormData.fromMap({
         'corPrimaria': corPrimaria,
+        'nome': nome,
       });
 
       if (logoBytes != null && logoName != null) {

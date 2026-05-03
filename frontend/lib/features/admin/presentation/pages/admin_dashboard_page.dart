@@ -57,7 +57,10 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       appBar: isDesktop
           ? null
           : AppBar(
-              title: const Text('Meu Ecommerce'),
+              title: Text(
+                provider.loja?.nome ?? 'Meu Ecommerce',
+                overflow: TextOverflow.ellipsis,
+              ),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.refresh),

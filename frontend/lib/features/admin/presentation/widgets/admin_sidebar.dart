@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/admin_provider.dart';
 
 class AdminSidebar extends StatelessWidget {
   final int currentIndex;
@@ -14,6 +16,8 @@ class AdminSidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.primaryColor;
+    final loja = context.watch<AdminProvider>().loja;
+    final storeName = loja?.nome ?? 'Meu Ecommerce';
 
     return Container(
       width: 260,
@@ -26,7 +30,7 @@ class AdminSidebar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildBrand(primaryColor, theme),
+          _buildBrand(primaryColor, theme, storeName),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -90,7 +94,7 @@ class AdminSidebar extends StatelessWidget {
     );
   }
 
-  Widget _buildBrand(Color primaryColor, ThemeData theme) {
+  Widget _buildBrand(Color primaryColor, ThemeData theme, String storeName) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
       child: Row(
@@ -105,10 +109,14 @@ class AdminSidebar extends StatelessWidget {
             child: const Icon(Icons.storefront, color: Colors.white, size: 20),
           ),
           const SizedBox(width: 12),
-          Text(
-            'Meu Ecommerce',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: Text(
+              storeName,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ],

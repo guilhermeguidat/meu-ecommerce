@@ -19,6 +19,7 @@ public class Loja {
     @Id
     private String id;
     private String corPrimaria;
+    private String nome;
 
     @Column(columnDefinition = "TEXT")
     private String bannersRaw;

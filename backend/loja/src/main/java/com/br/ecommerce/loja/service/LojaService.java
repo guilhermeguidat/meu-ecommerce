@@ -49,7 +49,7 @@ public class LojaService {
 
         if (bannerFiles != null && !bannerFiles.isEmpty()) {
             // Remove banners antigos antes de fazer upload dos novos
-            Loja lojaAtual = lojaRepository.findByid(ID_DEFAULT);
+            Loja lojaAtual = lojaRepository.findById(ID_DEFAULT).orElse(null);
             if (lojaAtual != null) {
                 var oldIndexes = parseBannerIndexes(lojaAtual.getBannersRaw());
                 for (int idx : oldIndexes) {
@@ -80,30 +80,30 @@ public class LojaService {
         }
 
         // Salva contagem de banners como índices CSV (0,1,2,...) para recuperar as URLs depois
-        Loja lojaParaContagem = lojaRepository.findByid(ID_DEFAULT);
+        Loja lojaParaContagem = lojaRepository.findById(ID_DEFAULT).orElse(null);
         int bannerCount = (bannerFiles != null) ? (int) bannerFiles.stream().filter(f -> f != null && !f.isEmpty()).count() : -1;
         String bannersRaw = bannerCount >= 0
                 ? buildBannerIndexesRaw(bannerCount)
                 : (lojaParaContagem != null ? lojaParaContagem.getBannersRaw() : "");
 
-        Loja loja = new Loja(ID_DEFAULT, lojaRequest.corPrimaria(), bannersRaw);
+        Loja loja = new Loja(ID_DEFAULT, lojaRequest.corPrimaria(), lojaRequest.nome(), bannersRaw);
         lojaRepository.save(loja);
 
         String logoUrl = logoEnviada ? bucketService.getUrl(ID_DEFAULT) : null;
 
         if (bannerFiles != null && !bannerFiles.isEmpty()) {
-            return new LojaResponse(loja.getCorPrimaria(), logoUrl, bannerUrls);
+            return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), logoUrl, bannerUrls);
         }
-        return new LojaResponse(loja.getCorPrimaria(), logoUrl, recuperaUrlsBanners(bannersRaw));
+        return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), logoUrl, recuperaUrlsBanners(bannersRaw));
     }
 
     public LojaResponse buscaConfig(){
-        Loja loja = lojaRepository.findByid(ID_DEFAULT);
+        Loja loja = lojaRepository.findById(ID_DEFAULT).orElse(null);
         if (loja == null) {
-            return new LojaResponse("#000000", null, List.of());
+            return new LojaResponse("#000000", "Meu Ecommerce", null, List.of());
         }
         var bannerUrls = recuperaUrlsBanners(loja.getBannersRaw());
-        return new LojaResponse(loja.getCorPrimaria(), bucketService.getUrl(ID_DEFAULT), bannerUrls);
+        return new LojaResponse(loja.getCorPrimaria(), loja.getNome(), bucketService.getUrl(ID_DEFAULT), bannerUrls);
     }
 
     private List<String> recuperaUrlsBanners(String bannersRaw) {

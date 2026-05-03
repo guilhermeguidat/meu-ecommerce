@@ -74,6 +74,7 @@ class AdminProvider extends ChangeNotifier {
 
   Future<void> updateStoreConfig({
     required String corPrimaria,
+    required String nome,
     List<Uint8List>? bannerBytes,
     List<String>? bannerNames,
     Uint8List? logoBytes,
@@ -86,6 +87,7 @@ class AdminProvider extends ChangeNotifier {
     try {
       _loja = await adminService.updateLojaConfig(
         corPrimaria: corPrimaria,
+        nome: nome,
         bannerBytes: bannerBytes,
         bannerNames: bannerNames,
         logoBytes: logoBytes,
