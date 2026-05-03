@@ -82,7 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     if (isDesktop)
                       Expanded(
-                        child: _buildLeftBrandArea(isDark),
+                        child: _buildLeftBrandArea(theme, isDark),
                       ),
                     Expanded(
                       child: _buildRightRegisterForm(context, isDark),
@@ -97,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildLeftBrandArea(bool isDark) {
+  Widget _buildLeftBrandArea(ThemeData theme, bool isDark) {
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -115,7 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                AppColors.primary.withValues(alpha: 0.9),
+                theme.primaryColor.withValues(alpha: 0.9),
                 Colors.transparent,
               ],
             ),
@@ -432,9 +432,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      child: const Text(
+                      child: Text(
                         'Sign in',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: theme.primaryColor),
                       ),
                     ),
                   ],

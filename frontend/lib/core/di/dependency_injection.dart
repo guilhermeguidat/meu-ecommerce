@@ -6,10 +6,13 @@ import '../../features/auth/presentation/providers/login_provider.dart';
 import '../../features/auth/presentation/providers/register_provider.dart';
 import '../../features/admin/data/services/admin_service.dart';
 import '../../features/admin/presentation/providers/admin_provider.dart';
+import '../theme/theme_provider.dart';
 
 final getIt = GetIt.instance;
 
 void setupDI() {
+  // Theme
+  getIt.registerSingleton<ThemeProvider>(ThemeProvider());
   // Network
   final dio = Dio(BaseOptions(
     baseUrl: 'http://localhost:8080',
@@ -37,5 +40,8 @@ void setupDI() {
   // Providers
   getIt.registerFactory<LoginProvider>(() => LoginProvider(authService: getIt<AuthService>()));
   getIt.registerFactory<RegisterProvider>(() => RegisterProvider(authService: getIt<AuthService>()));
-  getIt.registerFactory<AdminProvider>(() => AdminProvider(adminService: getIt<AdminService>()));
+  getIt.registerFactory<AdminProvider>(() => AdminProvider(
+    adminService: getIt<AdminService>(),
+    themeProvider: getIt<ThemeProvider>(),
+  ));
 }

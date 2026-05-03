@@ -1,13 +1,40 @@
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
+
+import 'package:flutter/material.dart';
+import 'package:frontend/core/theme/theme_provider.dart';
 import '../../data/models/loja_model.dart';
 import '../../data/models/produto_model.dart';
 import '../../data/services/admin_service.dart';
 
 class AdminProvider extends ChangeNotifier {
   final AdminService adminService;
+  final ThemeProvider themeProvider;
 
-  AdminProvider({required this.adminService});
+  AdminProvider({
+    required this.adminService,
+    required this.themeProvider,
+  });
+
+  void _updateGlobalTheme() {
+    if (_loja != null) {
+      themeProvider.updatePrimaryColor(_parseColor(_loja!.corPrimaria));
+    }
+  }
+
+  Color _parseColor(String hex) {
+    String formattedHex = hex.replaceFirst('#', '');
+    if (formattedHex.length == 3) {
+      formattedHex = formattedHex.split('').map((e) => '$e$e').join();
+    }
+    if (formattedHex.length == 6) {
+      formattedHex = 'FF$formattedHex';
+    }
+    try {
+      return Color(int.parse(formattedHex, radix: 16));
+    } catch (_) {
+      return themeProvider.primaryColor;
+    }
+  }
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -25,15 +52,20 @@ class AdminProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final results = await Future.wait([
-        adminService.getLojaConfig(),
-        adminService.getProdutos(),
-      ]);
+      // Carrega config da loja (pode ser pública)
+      try {
+        _loja = await adminService.getLojaConfig();
+        _updateGlobalTheme();
+      } catch (e) {
+        print('[AdminProvider] Erro ao carregar config da loja: $e');
+      }
 
-      _loja = results[0] as LojaModel;
-      _produtos = results[1] as List<ProdutoModel>;
-    } catch (e) {
-      _errorMessage = e.toString();
+      // Carrega produtos (geralmente requer token)
+      try {
+        _produtos = await adminService.getProdutos();
+      } catch (e) {
+        print('[AdminProvider] Erro ao carregar produtos (pode ser falta de login): $e');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -59,6 +91,7 @@ class AdminProvider extends ChangeNotifier {
         logoBytes: logoBytes,
         logoName: logoName,
       );
+      _updateGlobalTheme();
     } on Exception catch (e) {
       print('[AdminProvider] Erro ao atualizar loja: $e');
       _errorMessage = e.toString();

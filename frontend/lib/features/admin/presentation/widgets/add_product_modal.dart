@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,7 @@ class AddProductModal extends StatefulWidget {
   static Future<void> show(BuildContext context) {
     return showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.4),
+      barrierColor: Colors.black.withValues(alpha: 0.4),
       builder: (ctx) => const AddProductModal(),
     );
   }
@@ -81,56 +82,133 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
     final tamanhoCtrl = TextEditingController();
     final corCtrl = TextEditingController();
     final qtdCtrl = TextEditingController();
+    final theme = Theme.of(ctx);
+    Color pickerColor = theme.primaryColor;
+
+    corCtrl.addListener(() {
+      final hex = corCtrl.text.trim();
+      if (hex.length >= 4 && hex.startsWith('#')) {
+        try {
+          final color = _parseColor(hex);
+          pickerColor = color;
+        } catch (_) {}
+      }
+    });
 
     showDialog(
       context: ctx,
-      builder: (dCtx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Nova Variação', style: TextStyle(fontWeight: FontWeight.bold)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: tamanhoCtrl,
-              decoration: const InputDecoration(labelText: 'Tamanho', hintText: 'Ex: P, M, G, 38...'),
+      builder: (dCtx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Nova Variação', style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: tamanhoCtrl,
+                decoration: const InputDecoration(labelText: 'Tamanho', hintText: 'Ex: P, M, G, 38...'),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Selecione uma cor'),
+                          content: SingleChildScrollView(
+                            child: ColorPicker(
+                              pickerColor: pickerColor,
+                              onColorChanged: (color) {
+                                setDialogState(() {
+                                  pickerColor = color;
+                                  corCtrl.text = _colorToHex(color);
+                                });
+                              },
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Fechar'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: pickerColor,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+                      ),
+                      child: const Icon(Icons.colorize, color: Colors.white, size: 20),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextField(
+                      controller: corCtrl,
+                      decoration: const InputDecoration(labelText: 'Cor', hintText: 'Ex: Azul, #2563EB...'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: qtdCtrl,
+                decoration: const InputDecoration(labelText: 'Quantidade'),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dCtx),
+              child: const Text('Cancelar'),
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: corCtrl,
-              decoration: const InputDecoration(labelText: 'Cor', hintText: 'Ex: Azul, #2563EB...'),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: qtdCtrl,
-              decoration: const InputDecoration(labelText: 'Quantidade'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ElevatedButton(
+              onPressed: () {
+                if (tamanhoCtrl.text.isNotEmpty && corCtrl.text.isNotEmpty) {
+                  setState(() {
+                    _variacoes.add(ProdutoVariacaoModel(
+                      tamanho: tamanhoCtrl.text.trim(),
+                      cor: corCtrl.text.trim(),
+                      quantidade: int.tryParse(qtdCtrl.text) ?? 0,
+                    ));
+                  });
+                  Navigator.pop(dCtx);
+                }
+              },
+              child: const Text('Adicionar'),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dCtx),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (tamanhoCtrl.text.isNotEmpty && corCtrl.text.isNotEmpty) {
-                setState(() {
-                  _variacoes.add(ProdutoVariacaoModel(
-                    tamanho: tamanhoCtrl.text.trim(),
-                    cor: corCtrl.text.trim(),
-                    quantidade: int.tryParse(qtdCtrl.text) ?? 0,
-                  ));
-                });
-                Navigator.pop(dCtx);
-              }
-            },
-            child: const Text('Adicionar'),
-          ),
-        ],
       ),
     );
+  }
+
+  Color _parseColor(String hex) {
+    String formattedHex = hex.replaceFirst('#', '');
+    if (formattedHex.length == 3) {
+      formattedHex = formattedHex.split('').map((e) => '$e$e').join();
+    }
+    if (formattedHex.length == 6) {
+      formattedHex = 'FF$formattedHex';
+    }
+    try {
+      return Color(int.parse(formattedHex, radix: 16));
+    } catch (_) {
+      return Theme.of(context).primaryColor;
+    }
+  }
+
+  String _colorToHex(Color color) {
+    return '#${color.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
   }
 
   Future<void> _submit() async {
@@ -203,7 +281,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(isDark ? 0.5 : 0.12),
+                  color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.12),
                   blurRadius: 40,
                   offset: const Offset(0, 16),
                 ),
@@ -215,7 +293,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _buildHeader(isDark),
+                  _buildHeader(theme, isDark),
                   Flexible(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
@@ -224,7 +302,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                         children: [
                           _buildImagePicker(theme, isDark),
                           const SizedBox(height: 20),
-                          _buildSectionLabel('Informações Básicas'),
+                          _buildSectionLabel(theme, 'Informações Básicas'),
                           const SizedBox(height: 12),
                           _buildField(
                             controller: _descricaoController,
@@ -277,16 +355,16 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                             icon: Icons.label_outline_rounded,
                           ),
                           const SizedBox(height: 20),
-                          _buildSectionLabel('Variações'),
+                          _buildSectionLabel(theme, 'Variações'),
                           const SizedBox(height: 12),
                           _buildVariacoesList(theme, isDark),
                           const SizedBox(height: 10),
-                          _buildAddVariacaoButton(isDark),
+                          _buildAddVariacaoButton(theme, isDark),
                         ],
                       ),
                     ),
                   ),
-                  _buildFooter(context, isDark),
+                  _buildFooter(context, theme, isDark),
                 ],
               ),
             ),
@@ -296,7 +374,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
     );
   }
 
-  Widget _buildHeader(bool isDark) {
+  Widget _buildHeader(ThemeData theme, bool isDark) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 20, 16, 20),
       decoration: BoxDecoration(
@@ -308,10 +386,10 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: theme.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.add_box_rounded, color: AppColors.primary, size: 22),
+            child: Icon(Icons.add_box_rounded, color: theme.primaryColor, size: 22),
           ),
           const SizedBox(width: 12),
           Column(
@@ -336,7 +414,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.close_rounded),
             style: IconButton.styleFrom(
-              backgroundColor: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+              backgroundColor: isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.05),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
           ),
@@ -354,10 +432,10 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
         decoration: BoxDecoration(
           color: _imagemBytes != null
               ? Colors.transparent
-              : (isDark ? Colors.white.withOpacity(0.04) : const Color(0xFFF8FAFC)),
+              : (isDark ? Colors.white.withValues(alpha: 0.04) : const Color(0xFFF8FAFC)),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: _imagemBytes != null ? AppColors.primary : (isDark ? AppColors.borderDark : AppColors.borderLight),
+            color: _imagemBytes != null ? theme.primaryColor : (isDark ? AppColors.borderDark : AppColors.borderLight),
             width: _imagemBytes != null ? 2 : 1.5,
             style: BorderStyle.solid,
           ),
@@ -391,10 +469,10 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: theme.primaryColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.cloud_upload_outlined, color: AppColors.primary, size: 28),
+                    child: Icon(Icons.cloud_upload_outlined, color: theme.primaryColor, size: 28),
                   ),
                   const SizedBox(height: 8),
                   const Text(
@@ -412,14 +490,14 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
     );
   }
 
-  Widget _buildSectionLabel(String text) {
+  Widget _buildSectionLabel(ThemeData theme, String text) {
     return Text(
       text.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w700,
         letterSpacing: 0.8,
-        color: AppColors.primary,
+        color: theme.primaryColor,
       ),
     );
   }
@@ -441,7 +519,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: Icon(icon, size: 18, color: AppColors.primary.withOpacity(0.7)),
+        prefixIcon: Icon(icon, size: 18, color: Theme.of(context).primaryColor.withValues(alpha: 0.7)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
     );
@@ -452,7 +530,7 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? Colors.white.withOpacity(0.04) : const Color(0xFFF8FAFC),
+          color: isDark ? Colors.white.withValues(alpha: 0.04) : const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: isDark ? AppColors.borderDark : AppColors.borderLight),
         ),
@@ -477,29 +555,29 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
       children: _variacoes.asMap().entries.map((entry) {
         final i = entry.key;
         final v = entry.value;
-        return _buildVariacaoChip(v, i, isDark);
+        return _buildVariacaoChip(theme, v, i, isDark);
       }).toList(),
     );
   }
 
-  Widget _buildVariacaoChip(ProdutoVariacaoModel v, int index, bool isDark) {
+  Widget _buildVariacaoChip(ThemeData theme, ProdutoVariacaoModel v, int index, bool isDark) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: theme.primaryColor.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        border: Border.all(color: theme.primaryColor.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.12),
+              color: theme.primaryColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(6),
             ),
-            child: const Icon(Icons.style_rounded, color: AppColors.primary, size: 16),
+            child: Icon(Icons.style_rounded, color: theme.primaryColor, size: 16),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -544,21 +622,21 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
     );
   }
 
-  Widget _buildAddVariacaoButton(bool isDark) {
+  Widget _buildAddVariacaoButton(ThemeData theme, bool isDark) {
     return OutlinedButton.icon(
       onPressed: _addVariacao,
       icon: const Icon(Icons.add_circle_outline_rounded, size: 18),
       label: const Text('Adicionar Variação'),
       style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.primary,
-        side: BorderSide(color: AppColors.primary.withOpacity(0.4)),
+        foregroundColor: theme.primaryColor,
+        side: BorderSide(color: theme.primaryColor.withValues(alpha: 0.4)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         padding: const EdgeInsets.symmetric(vertical: 12),
       ),
     );
   }
 
-  Widget _buildFooter(BuildContext context, bool isDark) {
+  Widget _buildFooter(BuildContext context, ThemeData theme, bool isDark) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
       decoration: BoxDecoration(
@@ -584,9 +662,9 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
             child: ElevatedButton(
               onPressed: _isLoading ? null : _submit,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: theme.primaryColor,
                 foregroundColor: Colors.white,
-                disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
+                disabledBackgroundColor: theme.primaryColor.withValues(alpha: 0.5),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 elevation: 0,

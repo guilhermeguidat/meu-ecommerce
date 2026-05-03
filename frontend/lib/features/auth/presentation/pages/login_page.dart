@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/admin/presentation/providers/admin_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'register_page.dart';
 import '../../../storefront/presentation/pages/home_page.dart';
+import '../../../admin/presentation/pages/admin_dashboard_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,6 +20,14 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AdminProvider>().loadData();
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -28,11 +38,17 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text;
     final password = _passwordController.text;
     if (email.isNotEmpty && password.isNotEmpty) {
-      await context.read<LoginProvider>().login(email, password);
-      if (mounted && context.read<LoginProvider>().isSuccess) {
+      final loginProvider = context.read<LoginProvider>();
+      await loginProvider.login(email, password);
+      
+      if (mounted && loginProvider.isSuccess) {
+        final destination = loginProvider.isAdmin 
+            ? const AdminDashboardPage() 
+            : const HomePage();
+            
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const HomePage()),
+          MaterialPageRoute(builder: (_) => destination),
         );
       }
     }
@@ -75,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     if (isDesktop)
                       Expanded(
-                        child: _buildLeftBrandArea(isDark),
+                        child: _buildLeftBrandArea(theme, isDark),
                       ),
                     Expanded(
                       child: _buildRightLoginForm(context, isDark),
@@ -90,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLeftBrandArea(bool isDark) {
+  Widget _buildLeftBrandArea(ThemeData theme, bool isDark) {
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -108,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                AppColors.primary.withValues(alpha: 0.9),
+                theme.primaryColor.withValues(alpha: 0.9),
                 Colors.transparent,
               ],
             ),
@@ -357,9 +373,9 @@ class _LoginPageState extends State<LoginPage> {
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      child: const Text(
+                      child: Text(
                         'Forgot Password?',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primary),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: theme.primaryColor),
                       ),
                     ),
                   ],
@@ -430,9 +446,9 @@ class _LoginPageState extends State<LoginPage> {
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Create an account',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: theme.primaryColor),
                     ),
                   ),
                 ],

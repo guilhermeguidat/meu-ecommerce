@@ -20,7 +20,7 @@ class AdminSidebar extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         border: Border(
-          right: BorderSide(color: theme.dividerColor.withOpacity(0.1)),
+          right: BorderSide(color: theme.dividerColor.withValues(alpha: 0.1)),
         ),
       ),
       child: Column(
@@ -133,7 +133,7 @@ class AdminSidebar extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? primaryColor.withOpacity(0.1) : Colors.transparent,
+            color: isSelected ? primaryColor.withValues(alpha: 0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(

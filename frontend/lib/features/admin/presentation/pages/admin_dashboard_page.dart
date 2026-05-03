@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/theme/theme_provider.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/admin_sidebar.dart';
 import 'store_settings_view.dart';
@@ -14,7 +15,7 @@ class AdminDashboardPage extends StatefulWidget {
 }
 
 class _AdminDashboardPageState extends State<AdminDashboardPage> {
-  int _currentIndex = 0;
+  int _currentIndex = 5;
 
   @override
   void initState() {
@@ -105,9 +106,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       height: 64,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
         border: Border(
-          bottom: BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.1)),
+          bottom: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
         ),
       ),
       child: Row(

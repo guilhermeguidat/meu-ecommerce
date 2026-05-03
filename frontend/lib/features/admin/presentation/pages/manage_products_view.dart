@@ -59,7 +59,7 @@ class ManageProductsView extends StatelessWidget {
           icon: const Icon(Icons.add_rounded, size: 18),
           label: const Text('Novo Produto', style: TextStyle(fontWeight: FontWeight.w600)),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
+            backgroundColor: theme.primaryColor,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -80,7 +80,7 @@ class ManageProductsView extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -89,12 +89,12 @@ class ManageProductsView extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: provider.produtos.isEmpty
-            ? _buildEmptyState(isDark)
+            ? _buildEmptyState(theme, isDark)
             : SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   headingRowColor: WidgetStateProperty.resolveWith(
-                    (states) => isDark ? Colors.white.withOpacity(0.04) : const Color(0xFFF8FAFC),
+                    (states) => isDark ? Colors.white.withValues(alpha: 0.04) : const Color(0xFFF8FAFC),
                   ),
                   headingTextStyle: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -127,9 +127,9 @@ class ManageProductsView extends StatelessWidget {
                                         width: 38,
                                         height: 38,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (_, __, ___) => _buildImagePlaceholder(),
+                                        errorBuilder: (_, __, ___) => _buildImagePlaceholder(theme),
                                       )
-                                    : _buildImagePlaceholder(),
+                                    : _buildImagePlaceholder(theme),
                               ),
                               const SizedBox(width: 12),
                               Text(
@@ -143,13 +143,13 @@ class ManageProductsView extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.08),
+                              color: theme.primaryColor.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               produto.categoria ?? 'Sem Categoria',
-                              style: const TextStyle(
-                                color: AppColors.primary,
+                              style: TextStyle(
+                                color: theme.primaryColor,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -170,7 +170,7 @@ class ManageProductsView extends StatelessWidget {
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                       decoration: BoxDecoration(
-                                        color: Colors.purple.withOpacity(0.1),
+                                        color: Colors.purple.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
@@ -204,7 +204,7 @@ class ManageProductsView extends StatelessWidget {
                               onPressed: () => _confirmDelete(ctx, provider, produto.id!),
                               tooltip: 'Excluir Produto',
                               style: IconButton.styleFrom(
-                                backgroundColor: Colors.red.withOpacity(0.08),
+                                backgroundColor: Colors.red.withValues(alpha: 0.08),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
                             ),
@@ -219,7 +219,7 @@ class ManageProductsView extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(bool isDark) {
+  Widget _buildEmptyState(ThemeData theme, bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 56, horizontal: 24),
       child: Column(
@@ -228,10 +228,10 @@ class ManageProductsView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.08),
+              color: theme.primaryColor.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.inventory_2_outlined, size: 36, color: AppColors.primary),
+            child: Icon(Icons.inventory_2_outlined, size: 36, color: theme.primaryColor),
           ),
           const SizedBox(height: 16),
           const Text(
@@ -248,15 +248,15 @@ class ManageProductsView extends StatelessWidget {
     );
   }
 
-  Widget _buildImagePlaceholder() {
+  Widget _buildImagePlaceholder(ThemeData theme) {
     return Container(
       width: 38,
       height: 38,
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.08),
+        color: theme.primaryColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Icon(Icons.inventory_2_outlined, size: 18, color: AppColors.primary),
+      child: Icon(Icons.inventory_2_outlined, size: 18, color: theme.primaryColor),
     );
   }
 

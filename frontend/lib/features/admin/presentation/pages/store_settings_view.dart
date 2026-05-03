@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../providers/admin_provider.dart';
@@ -14,6 +15,7 @@ class StoreSettingsView extends StatefulWidget {
 
 class _StoreSettingsViewState extends State<StoreSettingsView> {
   final _corPrimariaController = TextEditingController();
+  Color _pickerColor = AppColors.primary;
 
   // Banners selecionados via image_picker (novos uploads)
   final List<Uint8List> _bannerBytes = [];
@@ -29,11 +31,77 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
     if (provider.loja != null) {
       _corPrimariaController.text = provider.loja!.corPrimaria;
       _bannersExistentes = List.from(provider.loja!.banners);
+      try {
+        _pickerColor = _parseColor(provider.loja!.corPrimaria);
+      } catch (_) {}
+    } else {
+      // Tenta pegar a cor do tema atual como fallback inicial
+      Future.microtask(() {
+        if (mounted) {
+          setState(() {
+            _pickerColor = Theme.of(context).primaryColor;
+          });
+        }
+      });
     }
+    _corPrimariaController.addListener(_onHexChanged);
+  }
+
+  void _onHexChanged() {
+    final hex = _corPrimariaController.text.trim();
+    if (hex.length >= 4 && hex.startsWith('#')) {
+      try {
+        setState(() {
+          _pickerColor = _parseColor(hex);
+        });
+      } catch (_) {}
+    }
+  }
+
+  Color _parseColor(String hex) {
+    String formattedHex = hex.replaceFirst('#', '');
+    if (formattedHex.length == 3) {
+      formattedHex = formattedHex.split('').map((e) => '$e$e').join();
+    }
+    if (formattedHex.length == 6) {
+      formattedHex = 'FF$formattedHex';
+    }
+    return Color(int.parse(formattedHex, radix: 16));
+  }
+
+  String _colorToHex(Color color) {
+    return '#${color.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
+  }
+
+  void _showColorPicker() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Selecione uma cor'),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: _pickerColor,
+            onColorChanged: (color) {
+              setState(() {
+                _pickerColor = color;
+                _corPrimariaController.text = _colorToHex(color);
+              });
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void dispose() {
+    _corPrimariaController.removeListener(_onHexChanged);
     _corPrimariaController.dispose();
     super.dispose();
   }
@@ -119,10 +187,10 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: theme.dividerColor.withOpacity(0.1)),
+              border: Border.all(color: theme.dividerColor.withValues(alpha: 0.1)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.02),
+                  color: Colors.black.withValues(alpha: 0.02),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -165,12 +233,39 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
                 // ---- Cor Primária ----
                 const Text('Cor Primária', style: TextStyle(fontWeight: FontWeight.w500)),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: _corPrimariaController,
-                  decoration: const InputDecoration(
-                    hintText: 'Ex: #135bec',
-                    prefixIcon: Icon(Icons.color_lens_outlined),
-                  ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: _showColorPicker,
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: _pickerColor,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: theme.dividerColor.withValues(alpha: 0.2)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _pickerColor.withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.colorize, color: Colors.white, size: 20),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextField(
+                        controller: _corPrimariaController,
+                        decoration: const InputDecoration(
+                          hintText: 'Ex: #135BEC',
+                          prefixIcon: Icon(Icons.tag, size: 18),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 28),
 
@@ -185,7 +280,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
 
                 // Banners já salvos no servidor
                 if (_bannersExistentes.isNotEmpty) ...[
-                  _buildSectionLabel('Banners Atuais', isDark),
+                  _buildSectionLabel(theme, 'Banners Atuais', isDark),
                   const SizedBox(height: 8),
                   _buildBannersExistentesGrid(isDark),
                   const SizedBox(height: 16),
@@ -193,9 +288,9 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
 
                 // Novos banners selecionados
                 if (_bannerBytes.isNotEmpty) ...[
-                  _buildSectionLabel('Novos Banners (${_bannerBytes.length})', isDark),
+                  _buildSectionLabel(theme, 'Novos Banners (${_bannerBytes.length})', isDark),
                   const SizedBox(height: 8),
-                  _buildNovoBannersGrid(isDark),
+                  _buildNovoBannersGrid(theme, isDark),
                   const SizedBox(height: 12),
                 ],
 
@@ -205,8 +300,8 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
                   icon: const Icon(Icons.add_photo_alternate_outlined, size: 18),
                   label: const Text('Adicionar Banners'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primary,
-                    side: BorderSide(color: AppColors.primary.withOpacity(0.4)),
+                    foregroundColor: theme.primaryColor,
+                    side: BorderSide(color: theme.primaryColor.withValues(alpha: 0.4)),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   ),
@@ -219,7 +314,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
                   child: ElevatedButton(
                     onPressed: provider.isLoading ? null : _saveSettings,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: theme.primaryColor,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       elevation: 0,
@@ -241,14 +336,14 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
     );
   }
 
-  Widget _buildSectionLabel(String text, bool isDark) {
+  Widget _buildSectionLabel(ThemeData theme, String text, bool isDark) {
     return Text(
       text.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w700,
         letterSpacing: 0.8,
-        color: AppColors.primary,
+        color: theme.primaryColor,
       ),
     );
   }
@@ -267,7 +362,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
     );
   }
 
-  Widget _buildNovoBannersGrid(bool isDark) {
+  Widget _buildNovoBannersGrid(ThemeData theme, bool isDark) {
     return SizedBox(
       height: 110,
       child: ListView.separated(
@@ -275,7 +370,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
         itemCount: _bannerBytes.length,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
-          return _buildBannerCardBytes(_bannerBytes[index], _bannerNames[index], index, isDark);
+          return _buildBannerCardBytes(theme, _bannerBytes[index], _bannerNames[index], index, isDark);
         },
       ),
     );
@@ -320,7 +415,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
     );
   }
 
-  Widget _buildBannerCardBytes(Uint8List bytes, String name, int index, bool isDark) {
+  Widget _buildBannerCardBytes(ThemeData theme, Uint8List bytes, String name, int index, bool isDark) {
     return Stack(
       children: [
         Container(
@@ -328,7 +423,7 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
           height: 110,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.primary.withOpacity(0.5), width: 1.5),
+            border: Border.all(color: theme.primaryColor.withValues(alpha: 0.5), width: 1.5),
           ),
           clipBehavior: Clip.antiAlias,
           child: Stack(

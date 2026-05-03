@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/di/dependency_injection.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_provider.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/providers/login_provider.dart';
 import 'features/auth/presentation/providers/register_provider.dart';
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(
+          value: getIt<ThemeProvider>(),
+        ),
         ChangeNotifierProvider(
           create: (_) => getIt<LoginProvider>(),
         ),
@@ -30,13 +34,17 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<AdminProvider>(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Meu E-Commerce - Onboarding',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        home: const LoginPage(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'Meu E-Commerce - Onboarding',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme(themeProvider.primaryColor),
+            darkTheme: AppTheme.darkTheme(themeProvider.primaryColor),
+            themeMode: themeProvider.themeMode,
+            home: const LoginPage(),
+          );
+        },
       ),
     );
   }
