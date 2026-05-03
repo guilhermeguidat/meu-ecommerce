@@ -92,26 +92,51 @@ class _StoreSettingsViewState extends State<StoreSettingsView> {
   void _showColorPicker() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Selecione uma cor'),
-        content: SingleChildScrollView(
-          child: ColorPicker(
-            pickerColor: _pickerColor,
-            onColorChanged: (color) {
-              setState(() {
-                _pickerColor = color;
-                _corPrimariaController.text = _colorToHex(color);
-              });
-            },
+      builder: (context) {
+        final theme = Theme.of(context);
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+          actionsPadding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+          title: Row(
+            children: [
+              Icon(Icons.palette_outlined, color: theme.primaryColor),
+              const SizedBox(width: 10),
+              const Text('Escolher Cor', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Fechar'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _pickerColor,
+              enableAlpha: false,
+              displayThumbColor: true,
+              pickerAreaBorderRadius: BorderRadius.circular(12),
+              portraitOnly: true,
+              colorPickerWidth: 280,
+              onColorChanged: (color) {
+                setState(() {
+                  _pickerColor = color;
+                  _corPrimariaController.text = _colorToHex(color);
+                });
+              },
+            ),
           ),
-        ],
-      ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.primaryColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                elevation: 0,
+              ),
+              child: const Text('Pronto', style: TextStyle(fontWeight: FontWeight.w600)),
+            ),
+          ],
+        );
+      },
     );
   }
 

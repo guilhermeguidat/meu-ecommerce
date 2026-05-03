@@ -141,10 +141,25 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: const Text('Selecione uma cor'),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+                          actionsPadding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                          title: Row(
+                            children: [
+                              Icon(Icons.palette_outlined, color: theme.primaryColor),
+                              const SizedBox(width: 10),
+                              const Text('Escolher Cor', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            ],
+                          ),
                           content: SingleChildScrollView(
                             child: ColorPicker(
                               pickerColor: pickerColor,
+                              enableAlpha: false,
+                              displayThumbColor: true,
+                              pickerAreaBorderRadius: BorderRadius.circular(12),
+                              portraitOnly: true,
+                              colorPickerWidth: 280,
                               onColorChanged: (color) {
                                 setDialogState(() {
                                   pickerColor = color;
@@ -154,9 +169,16 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
                             ),
                           ),
                           actions: [
-                            TextButton(
+                            ElevatedButton(
                               onPressed: () => Navigator.pop(context),
-                              child: const Text('Fechar'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: theme.primaryColor,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                elevation: 0,
+                              ),
+                              child: const Text('Pronto', style: TextStyle(fontWeight: FontWeight.w600)),
                             ),
                           ],
                         ),
@@ -414,7 +436,6 @@ class _AddProductModalState extends State<AddProductModal> with SingleTickerProv
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 20, 16, 20),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: isDark ? AppColors.borderDark : AppColors.borderLight)),
         borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),
       child: Row(
