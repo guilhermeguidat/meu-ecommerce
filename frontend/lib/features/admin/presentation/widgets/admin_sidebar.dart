@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/auth/presentation/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/admin_provider.dart';
 
@@ -16,8 +17,13 @@ class AdminSidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.primaryColor;
-    final loja = context.watch<AdminProvider>().loja;
+    final adminProvider = context.watch<AdminProvider>();
+    final loginProvider = context.watch<LoginProvider>();
+    final loja = adminProvider.loja;
     final storeName = loja?.nome ?? 'Meu Ecommerce';
+
+    final userName = loginProvider.userName ?? 'Administrador';
+    final userEmail = loginProvider.userEmail ?? 'admin@store.com';
 
     return Container(
       width: 260,
@@ -85,7 +91,7 @@ class AdminSidebar extends StatelessWidget {
                   theme: theme,
                 ),
                 const SizedBox(height: 16),
-                _buildUserProfile(),
+                _buildUserProfile(theme, primaryColor, userName, userEmail),
               ],
             ),
           ),
@@ -166,33 +172,63 @@ class AdminSidebar extends StatelessWidget {
     );
   }
 
-  Widget _buildUserProfile() {
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 16,
-          backgroundColor: Colors.grey[200],
-          child: const Icon(Icons.person, size: 20, color: Colors.grey),
-        ),
-        const SizedBox(width: 12),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Administrador',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                overflow: TextOverflow.ellipsis,
+  Widget _buildUserProfile(ThemeData theme, Color primaryColor, String name, String email) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.05)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [primaryColor, primaryColor.withValues(alpha: 0.7)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              Text(
-                'admin@store.com',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: primaryColor.withValues(alpha: 0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.person_rounded, color: Colors.white, size: 22),
           ),
-        ),
-      ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  name,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  email,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[500],
+                    fontSize: 11,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

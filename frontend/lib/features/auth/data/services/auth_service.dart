@@ -88,5 +88,35 @@ class AuthService {
       return null;
     }
   }
+
+  Future<String?> getUserEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    if (token == null) return null;
+    
+    try {
+      final decodedToken = JwtDecoder.decode(token);
+      return decodedToken['sub'] as String?;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<String?> getUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    if (token == null) return null;
+    
+    try {
+      final decodedToken = JwtDecoder.decode(token);
+      final role = decodedToken['role'] as String?;
+      if (role == 'ADMIN' || role == 'ROLE_ADMIN') {
+        return 'Administrador';
+      }
+      return decodedToken['nome'] as String? ?? 'Usuário';
+    } catch (e) {
+      return null;
+    }
+  }
 }
 
