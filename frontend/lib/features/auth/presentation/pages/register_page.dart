@@ -151,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const Spacer(),
               const Text(
-                'Join us and scale your business.',
+                'Junte-se a nós e escale seu negócio.',
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
@@ -161,7 +161,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Create an account to access the next generation of e-commerce tools. Built for speed, scalability, and impact.',
+                'Crie uma conta para acessar as ferramentas de e-commerce da próxima geração. Feito para velocidade, escala e impacto.',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
@@ -225,7 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Create an account',
+                  'Criar uma conta',
                   style: theme.textTheme.displayLarge?.copyWith(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
@@ -235,7 +235,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Fill in the details below to get started.',
+                  'Preencha os detalhes abaixo para começar.',
                   style: TextStyle(
                     fontSize: 16,
                     color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight,
@@ -295,14 +295,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Padding(
                   padding: EdgeInsets.only(left: 4, bottom: 8),
                   child: Text(
-                    'Full Name',
+                    'Nome Completo',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
                 TextField(
                   controller: _nomeController,
                   decoration: InputDecoration(
-                    hintText: 'John Doe',
+                    hintText: 'Ex: João Silva',
                     prefixIcon: Icon(Icons.person_outline, size: 20, color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
                   ),
                 ),
@@ -330,7 +330,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Padding(
                   padding: EdgeInsets.only(left: 4, bottom: 8),
                   child: Text(
-                    'Date of Birth (Optional)',
+                    'Data de Nascimento (Opcional)',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -338,7 +338,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _dataNascimentoController,
                   keyboardType: TextInputType.datetime,
                   decoration: InputDecoration(
-                    hintText: 'YYYY-MM-DD',
+                    hintText: 'AAAA-MM-DD',
                     prefixIcon: Icon(Icons.calendar_today_outlined, size: 20, color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
                   ),
                 ),
@@ -348,7 +348,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Padding(
                   padding: EdgeInsets.only(left: 4, bottom: 8),
                   child: Text(
-                    'Email address',
+                    'Endereço de e-mail',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -356,7 +356,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    hintText: 'name@company.com',
+                    hintText: 'email@empresa.com',
                     prefixIcon: Icon(Icons.mail_outline, size: 20, color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
                   ),
                 ),
@@ -366,7 +366,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Padding(
                   padding: EdgeInsets.only(left: 4, bottom: 8),
                   child: Text(
-                    'Password',
+                    'Senha',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -374,7 +374,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    hintText: 'Enter your password',
+                    hintText: 'Insira sua senha',
                     prefixIcon: Icon(Icons.lock_outline, size: 20, color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -408,7 +408,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
                       : const Text(
-                          'Sign Up',
+                          'Cadastrar',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                 ),
@@ -420,7 +420,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Already have an account? ",
+                      "Já tem uma conta? ",
                       style: TextStyle(color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
                     ),
                     TextButton(
@@ -433,7 +433,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: Text(
-                        'Sign in',
+                        'Entrar',
                         style: TextStyle(fontWeight: FontWeight.bold, color: theme.primaryColor),
                       ),
                     ),

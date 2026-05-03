@@ -31,7 +31,7 @@ class DashboardOverviewView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Good morning, Admin',
+              'Bom dia, Administrador',
               style: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
@@ -39,31 +39,14 @@ class DashboardOverviewView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Here's what's happening with your store today.",
+              "Aqui está o que está acontecendo com sua loja hoje.",
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: Colors.grey[600],
               ),
             ),
           ],
         ),
-        Row(
-          children: [
-            OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.download, size: 18),
-              label: const Text('Export'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add Product'),
-            ),
-          ],
-        ),
+        const SizedBox(), // Removidos botões de Exportar e Adicionar Produto conforme solicitado
       ],
     );
   }
@@ -82,8 +65,8 @@ class DashboardOverviewView extends StatelessWidget {
           childAspectRatio: 1.8,
           children: [
             StatCard(
-              title: 'Total Revenue',
-              value: '\$24,560.00',
+              title: 'Receita Total',
+              value: 'R\$ 24.560,00',
               icon: Icons.payments,
               iconBgColor: Colors.blue[50]!,
               iconColor: Colors.blue[600]!,
@@ -91,8 +74,8 @@ class DashboardOverviewView extends StatelessWidget {
               isTrendUp: true,
             ),
             StatCard(
-              title: 'Total Orders',
-              value: '1,245',
+              title: 'Total de Pedidos',
+              value: '1.245',
               icon: Icons.shopping_cart,
               iconBgColor: Colors.purple[50]!,
               iconColor: Colors.purple[600]!,
@@ -100,7 +83,7 @@ class DashboardOverviewView extends StatelessWidget {
               isTrendUp: true,
             ),
             StatCard(
-              title: 'Active Customers',
+              title: 'Clientes Ativos',
               value: '892',
               icon: Icons.group,
               iconBgColor: Colors.orange[50]!,
@@ -109,8 +92,8 @@ class DashboardOverviewView extends StatelessWidget {
               isTrendUp: false,
             ),
             StatCard(
-              title: 'Avg. Order Value',
-              value: '\$84.50',
+              title: 'Ticket Médio',
+              value: 'R\$ 84,50',
               icon: Icons.receipt_long,
               iconBgColor: Colors.teal[50]!,
               iconColor: Colors.teal[600]!,
@@ -135,7 +118,7 @@ class DashboardOverviewView extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          'Sales Performance Chart Placeholder',
+          'Gráfico de Desempenho de Vendas (Em breve)',
           style: TextStyle(color: Colors.grey[500]),
         ),
       ),

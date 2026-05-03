@@ -57,7 +57,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       appBar: isDesktop
           ? null
           : AppBar(
-              title: const Text('MerchantOS'),
+              title: const Text('Meu Ecommerce'),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.refresh),
@@ -115,37 +115,10 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'Overview',
+            'Visão Geral',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () => provider.loadData(),
-                tooltip: 'Recarregar Dados',
-              ),
-              const SizedBox(width: 16),
-              Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications_none),
-                    onPressed: () {},
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 8, right: 8),
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          const SizedBox(), // Removidos botões de ação conforme solicitado
         ],
       ),
     );

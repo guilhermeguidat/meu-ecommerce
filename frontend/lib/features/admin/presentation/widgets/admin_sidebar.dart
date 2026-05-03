@@ -61,7 +61,7 @@ class AdminSidebar extends StatelessWidget {
                 ),
                 _buildNavItem(
                   icon: Icons.bar_chart_outlined,
-                  label: 'Analytics',
+                  label: 'Análise',
                   index: 4,
                   primaryColor: primaryColor,
                   theme: theme,
@@ -75,7 +75,7 @@ class AdminSidebar extends StatelessWidget {
               children: [
                 _buildNavItem(
                   icon: Icons.settings_outlined,
-                  label: 'Store Settings',
+                  label: 'Configurações',
                   index: 5,
                   primaryColor: primaryColor,
                   theme: theme,
@@ -106,7 +106,7 @@ class AdminSidebar extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            'MerchantOS',
+            'Meu Ecommerce',
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -172,7 +172,7 @@ class AdminSidebar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Admin User',
+                'Administrador',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 overflow: TextOverflow.ellipsis,
               ),

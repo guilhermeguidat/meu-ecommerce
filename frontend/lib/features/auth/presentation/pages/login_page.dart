@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const Spacer(),
               const Text(
-                'Manage your store seamlessly.',
+                'Gerencie sua loja sem complicações.',
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Experience the next generation of e-commerce management. Powerful, intuitive, and designed for growth.',
+                'Experimente a próxima geração de gestão de e-commerce. Poderoso, intuitivo e projetado para crescer.',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(width: 16),
                         const Text(
-                          'Trusted by 10k+ brands',
+                          'Confiado por mais de 10 mil marcas',
                           style: TextStyle(
                             color: Colors.white60,
                             fontSize: 14,
@@ -209,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      '"The analytics dashboard has completely transformed how we track our inventory. Absolute game changer."',
+                      '"O dashboard de análise transformou completamente como acompanhamos nosso estoque. Um verdadeiro divisor de águas."',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -273,7 +273,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Welcome back',
+                'Bem-vindo de volta',
                 style: theme.textTheme.displayLarge?.copyWith(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -283,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Please enter your details to sign in.',
+                'Por favor, insira seus dados para entrar.',
                 style: TextStyle(
                   fontSize: 16,
                   color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight,
@@ -342,7 +342,7 @@ class _LoginPageState extends State<LoginPage> {
               const Padding(
                 padding: EdgeInsets.only(left: 4, bottom: 8),
                 child: Text(
-                  'Email address',
+                  'Endereço de e-mail',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                 ),
               ),
@@ -350,7 +350,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  hintText: 'name@company.com',
+                  hintText: 'Insira seu email',
                   prefixIcon: Icon(Icons.mail_outline, size: 20, color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
                 ),
               ),
@@ -363,7 +363,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Password',
+                      'Senha',
                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                     TextButton(
@@ -374,7 +374,7 @@ class _LoginPageState extends State<LoginPage> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: Text(
-                        'Forgot Password?',
+                        'Esqueceu a senha?',
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: theme.primaryColor),
                       ),
                     ),
@@ -385,7 +385,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 decoration: InputDecoration(
-                  hintText: 'Enter your password',
+                  hintText: 'Insira sua senha',
                   prefixIcon: Icon(Icons.lock_outline, size: 20, color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -419,7 +419,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                       )
                     : const Text(
-                        'Sign In',
+                        'Entrar',
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
               ),
@@ -431,7 +431,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account? ",
+                    "Não tem uma conta? ",
                     style: TextStyle(color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
                   ),
                   TextButton(
@@ -447,7 +447,7 @@ class _LoginPageState extends State<LoginPage> {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
-                      'Create an account',
+                      'Criar uma conta',
                       style: TextStyle(fontWeight: FontWeight.bold, color: theme.primaryColor),
                     ),
                   ),
