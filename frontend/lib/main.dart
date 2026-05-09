@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'core/di/dependency_injection.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
-import 'features/auth/presentation/pages/login_page.dart';
+
+import 'features/storefront/presentation/pages/storefront_home_page.dart';
+import 'features/storefront/presentation/providers/storefront_provider.dart';
 import 'features/auth/presentation/providers/login_provider.dart';
 import 'features/auth/presentation/providers/register_provider.dart';
 import 'features/admin/presentation/providers/admin_provider.dart';
@@ -33,6 +35,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => getIt<AdminProvider>(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<StorefrontProvider>(),
+        ),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -42,7 +47,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.lightTheme(themeProvider.primaryColor),
             darkTheme: AppTheme.darkTheme(themeProvider.primaryColor),
             themeMode: themeProvider.themeMode,
-            home: const LoginPage(),
+            home: const StorefrontHomePage(),
           );
         },
       ),

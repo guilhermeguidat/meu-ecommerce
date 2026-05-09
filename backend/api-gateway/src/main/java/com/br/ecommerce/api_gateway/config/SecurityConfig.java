@@ -33,6 +33,8 @@ public class SecurityConfig {
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .pathMatchers("/auth/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/loja").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/produto/buscaTodos").permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth ->

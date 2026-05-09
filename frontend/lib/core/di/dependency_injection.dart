@@ -6,6 +6,7 @@ import '../../features/auth/presentation/providers/login_provider.dart';
 import '../../features/auth/presentation/providers/register_provider.dart';
 import '../../features/admin/data/services/admin_service.dart';
 import '../../features/admin/presentation/providers/admin_provider.dart';
+import '../../features/storefront/presentation/providers/storefront_provider.dart';
 import '../theme/theme_provider.dart';
 
 final getIt = GetIt.instance;
@@ -41,6 +42,10 @@ void setupDI() {
   getIt.registerFactory<LoginProvider>(() => LoginProvider(authService: getIt<AuthService>()));
   getIt.registerFactory<RegisterProvider>(() => RegisterProvider(authService: getIt<AuthService>()));
   getIt.registerFactory<AdminProvider>(() => AdminProvider(
+    adminService: getIt<AdminService>(),
+    themeProvider: getIt<ThemeProvider>(),
+  ));
+  getIt.registerFactory<StorefrontProvider>(() => StorefrontProvider(
     adminService: getIt<AdminService>(),
     themeProvider: getIt<ThemeProvider>(),
   ));
