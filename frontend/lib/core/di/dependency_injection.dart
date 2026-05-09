@@ -7,6 +7,7 @@ import '../../features/auth/presentation/providers/register_provider.dart';
 import '../../features/admin/data/services/admin_service.dart';
 import '../../features/admin/presentation/providers/admin_provider.dart';
 import '../../features/storefront/presentation/providers/storefront_provider.dart';
+import '../../features/storefront/presentation/providers/cart_provider.dart';
 import '../theme/theme_provider.dart';
 
 final getIt = GetIt.instance;
@@ -49,4 +50,5 @@ void setupDI() {
     adminService: getIt<AdminService>(),
     themeProvider: getIt<ThemeProvider>(),
   ));
+  getIt.registerSingleton<CartProvider>(CartProvider());
 }

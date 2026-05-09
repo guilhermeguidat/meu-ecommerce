@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../providers/storefront_provider.dart';
+import '../providers/cart_provider.dart';
+import '../pages/shopping_cart_page.dart';
 
 class StorefrontAppBar extends StatelessWidget implements PreferredSizeWidget {
   final StorefrontProvider provider;
@@ -104,9 +107,41 @@ class StorefrontAppBar extends StatelessWidget implements PreferredSizeWidget {
               // Actions
               Row(
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.shopping_bag_outlined, color: isDark ? Colors.grey[300] : Colors.grey[600]),
-                    onPressed: () {},
+                  Consumer<CartProvider>(
+                    builder: (context, cart, _) {
+                      return Stack(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.shopping_bag_outlined,
+                              color: cart.itemCount > 0 ? theme.primaryColor : (isDark ? Colors.grey[300] : Colors.grey[600]),
+                            ),
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const ShoppingCartPage()));
+                            },
+                          ),
+                          if (cart.itemCount > 0)
+                            Positioned(
+                              right: 6,
+                              top: 6,
+                              child: Container(
+                                width: 18,
+                                height: 18,
+                                decoration: BoxDecoration(
+                                  color: theme.primaryColor,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: isDark ? const Color(0xFF101622) : Colors.white, width: 1.5),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    cart.itemCount > 9 ? '9+' : '${cart.itemCount}',
+                                    style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                   IconButton(
                     icon: Icon(Icons.person_outline, color: isDark ? Colors.grey[300] : Colors.grey[600]),

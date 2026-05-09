@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'register_page.dart';
-import '../../../storefront/presentation/pages/home_page.dart';
 import '../../../admin/presentation/pages/admin_dashboard_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -42,14 +41,15 @@ class _LoginPageState extends State<LoginPage> {
       await loginProvider.login(email, password);
       
       if (mounted && loginProvider.isSuccess) {
-        final destination = loginProvider.isAdmin 
-            ? const AdminDashboardPage() 
-            : const HomePage();
-            
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => destination),
-        );
+        if (loginProvider.isAdmin) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const AdminDashboardPage()),
+          );
+        } else {
+          // Usuário comum: apenas fecha a tela de login e volta
+          Navigator.pop(context);
+        }
       }
     }
   }

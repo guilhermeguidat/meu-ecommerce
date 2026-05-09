@@ -9,6 +9,7 @@ import 'features/storefront/presentation/providers/storefront_provider.dart';
 import 'features/auth/presentation/providers/login_provider.dart';
 import 'features/auth/presentation/providers/register_provider.dart';
 import 'features/admin/presentation/providers/admin_provider.dart';
+import 'features/storefront/presentation/providers/cart_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => getIt<StorefrontProvider>(),
+        ),
+        ChangeNotifierProvider<CartProvider>.value(
+          value: getIt<CartProvider>(),
         ),
       ],
       child: Consumer<ThemeProvider>(

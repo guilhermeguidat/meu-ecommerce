@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../admin/data/models/produto_model.dart';
 import '../../../admin/data/models/produto_variacao_model.dart';
 import '../providers/storefront_provider.dart';
+import '../providers/cart_provider.dart';
 import '../widgets/storefront_app_bar.dart';
+import '../../../auth/presentation/pages/login_page.dart';
+import 'shopping_cart_page.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final ProdutoModel produto;
@@ -446,7 +450,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         SizedBox(
                           height: 48,
                           child: ElevatedButton.icon(
-                            onPressed: outOfStock ? null : () {},
+                            onPressed: outOfStock ? null : () => _handleAddToCart(context),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: theme.primaryColor,
                               foregroundColor: Colors.white,
@@ -476,6 +480,112 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _handleAddToCart(BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token');
+
+      if (!context.mounted) return;
+
+      if (token == null || token.isEmpty) {
+        _showLoginRequired(context);
+        return;
+      }
+
+      final cart = context.read<CartProvider>();
+      cart.addItem(widget.produto, _selectedVariation, _quantity);
+
+      if (!context.mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ShoppingCartPage()),
+      );
+    } on Exception catch (e) {
+      debugPrint('[ProductDetailsPage] Erro ao adicionar ao carrinho: $e');
+    }
+  }
+
+  void _showLoginRequired(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1C2433) : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.grey[700] : Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Icon(Icons.lock_outline, size: 48, color: theme.primaryColor),
+              const SizedBox(height: 16),
+              Text(
+                'Faça login para continuar',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Você precisa estar logado para adicionar itens ao carrinho.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  fontSize: 15,
+                ),
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text(
+                    'Entrar na minha conta',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(
+                  'Continuar navegando',
+                  style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
