@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/admin/data/models/produto_model.dart';
 import 'package:intl/intl.dart';
+import '../pages/product_details_page.dart';
 
 class ProductCard extends StatelessWidget {
   final ProdutoModel produto;
@@ -19,7 +20,14 @@ class ProductCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetailsPage(produto: produto),
+            ),
+          );
+        },
         borderRadius: BorderRadius.circular(24),
         child: Container(
           decoration: BoxDecoration(
